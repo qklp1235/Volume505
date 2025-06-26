@@ -45,11 +45,11 @@ export default async function handler(req, res) {
         messages: [
           { 
             role: 'system', 
-            content: 'You are a helpful website analyzer. Provide a detailed but concise summary of the website content in Korean. Include key features, content overview, and recent updates if available. Format your response with clear sections using markdown.' 
+            content: 'You are a helpful website analyzer. Provide a detailed but concise summary of the website content in English. Include key features, content overview, and recent updates if available. Format your response with clear sections using markdown.' 
           },
           { 
             role: 'user', 
-            content: `다음 웹사이트 정보를 분석하고 상세하게 요약해주세요:\n\n${content}` 
+            content: `Please analyze and provide a detailed summary of the following website information:\n\n${content}` 
           }
         ],
         max_tokens: 800,

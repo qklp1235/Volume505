@@ -121,7 +121,7 @@ class SiteInfoRequester {
                 // 새로 추가된 정보
                 favicon: this.extractFavicon(doc, url),
                 canonicalUrl: this.extractCanonicalUrl(doc),
-                server: response.headers.get('server') || '정보 없음',
+                server: response.headers.get('server') || 'No information',
                 ogTitle: this.extractMetaProperty(doc, 'og:title'),
                 ogType: this.extractMetaProperty(doc, 'og:type'),
                 ogImage: this.extractMetaProperty(doc, 'og:image'),
@@ -159,17 +159,17 @@ class SiteInfoRequester {
 
     extractDescription(doc) {
         const metaDesc = doc.querySelector('meta[name="description"]');
-        if (metaDesc) return metaDesc.getAttribute('content') || '설명 없음';
+        if (metaDesc) return metaDesc.getAttribute('content') || 'No description';
         
         const ogDesc = doc.querySelector('meta[property="og:description"]');
-        if (ogDesc) return ogDesc.getAttribute('content') || '설명 없음';
+        if (ogDesc) return ogDesc.getAttribute('content') || 'No description';
         
-        return '설명 없음';
+        return 'No description';
     }
 
     extractKeywords(doc) {
         const metaKeywords = doc.querySelector('meta[name="keywords"]');
-        return metaKeywords ? metaKeywords.getAttribute('content') || '키워드 없음' : '키워드 없음';
+        return metaKeywords ? metaKeywords.getAttribute('content') || 'No keywords' : 'No keywords';
     }
 
     extractLanguage(doc) {
@@ -179,7 +179,7 @@ class SiteInfoRequester {
         const metaLang = doc.querySelector('meta[http-equiv="content-language"]');
         if (metaLang) return metaLang.getAttribute('content');
         
-        return '언어 정보 없음';
+        return 'No language information';
     }
 
     extractEncoding(doc) {
@@ -193,18 +193,18 @@ class SiteInfoRequester {
             if (charsetMatch) return charsetMatch[1];
         }
         
-        return '인코딩 정보 없음';
+        return 'No encoding information';
     }
 
     extractSecurityHeaders(status) {
-        if (!status) return '정보 없음';
+        if (!status) return 'No information';
         
         const headers = [];
         if (status.hsts) headers.push('HSTS');
         if (status.csp) headers.push('CSP');
         if (status.xframe) headers.push('X-Frame-Options');
         
-        return headers.length > 0 ? headers.join(', ') : '보안 헤더 없음';
+        return headers.length > 0 ? headers.join(', ') : 'No security headers';
     }
 
     extractSecurityHeadersFromHeaders(headers) {
@@ -213,12 +213,12 @@ class SiteInfoRequester {
         if (headers.get('content-security-policy')) securityHeaders.push('CSP');
         if (headers.get('x-frame-options')) securityHeaders.push('X-Frame-Options');
         
-        return securityHeaders.length > 0 ? securityHeaders.join(', ') : '보안 헤더 없음';
+        return securityHeaders.length > 0 ? securityHeaders.join(', ') : 'No security headers';
     }
 
     extractMetaProperty(doc, property) {
         const meta = doc.querySelector(`meta[property="${property}"]`);
-        return meta ? meta.getAttribute('content') : '정보 없음';
+        return meta ? meta.getAttribute('content') : 'No information';
     }
 
     extractFavicon(doc, siteUrl) {
@@ -235,7 +235,7 @@ class SiteInfoRequester {
 
     extractCanonicalUrl(doc) {
         const canonicalLink = doc.querySelector('link[rel="canonical"]');
-        return canonicalLink ? canonicalLink.getAttribute('href') : '정보 없음';
+        return canonicalLink ? canonicalLink.getAttribute('href') : 'No information';
     }
 
     extractResourceCounts(doc, siteUrl) {
@@ -306,7 +306,7 @@ class SiteInfoRequester {
         this.statusIndicator.className = 'status-indicator success';
         
         // Favicon
-        if (siteInfo.favicon && siteInfo.favicon !== '정보 없음') {
+        if (siteInfo.favicon && siteInfo.favicon !== 'No information') {
             this.siteFavicon.src = siteInfo.favicon;
             this.siteFavicon.style.display = 'inline-block';
             this.siteFavicon.onerror = () => { this.siteFavicon.style.display = 'none'; };
@@ -324,14 +324,14 @@ class SiteInfoRequester {
         this.setText('siteKeywords', siteInfo.keywords);
         this.setText('siteLanguage', siteInfo.language);
         this.setText('siteEncoding', siteInfo.encoding);
-        this.setText('isHttps', siteInfo.isHttps ? '예' : '아니오');
+        this.setText('isHttps', siteInfo.isHttps ? 'Yes' : 'No');
         this.setText('sslStatus', siteInfo.sslStatus);
         this.setText('securityHeaders', siteInfo.securityHeaders);
         this.setText('ogTitle', siteInfo.ogTitle);
         this.setText('ogType', siteInfo.ogType);
         // OG 이미지
         const ogImage = document.getElementById('ogImage');
-        if (siteInfo.ogImage && siteInfo.ogImage !== '정보 없음') {
+        if (siteInfo.ogImage && siteInfo.ogImage !== 'No information') {
             ogImage.src = siteInfo.ogImage;
             ogImage.style.display = 'block';
         } else {
@@ -394,16 +394,16 @@ class SiteInfoRequester {
         try {
             domain = new URL(url).hostname.replace(/^www\./, '');
         } catch (e) {
-            return { country: selectedCountry, countryName: selectedCountryName, status: '도메인 분석 실패', rank: 'N/A' };
+            return { country: selectedCountry, countryName: selectedCountryName, status: 'Domain analysis failed', rank: 'N/A' };
         }
 
         const rankList = this.sampleTopSites[selectedCountry];
         const rank = rankList.indexOf(domain) + 1;
 
         if (rank > 0) {
-            return { country: selectedCountry, countryName: selectedCountryName, status: '목록에 포함됨', rank: `${rank}위` };
+            return { country: selectedCountry, countryName: selectedCountryName, status: 'In list', rank: `#${rank}` };
         } else {
-            return { country: selectedCountry, countryName: selectedCountryName, status: '목록에 없음', rank: 'N/A' };
+            return { country: selectedCountry, countryName: selectedCountryName, status: 'Not in list', rank: 'N/A' };
         }
     }
 
@@ -660,7 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 // ... existing code ...
             } catch (err) {
-                showError('사이트 정보를 가져올 수 없습니다: ' + err.message);
+                showError('Unable to fetch site information: ' + err.message);
             }
         });
     }
