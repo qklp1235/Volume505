@@ -798,51 +798,75 @@ function initMobileFooterAccordion() {
     const content = section.querySelector('ul');
     
     if (header && content) {
-      // Remove existing listeners and arrows
-      header.replaceWith(header.cloneNode(true));
-      const newHeader = section.querySelector('h3');
+      // Check if already initialized
+      if (header.dataset.accordionInit === 'true') {
+        return;
+      }
+      
+      // Remove any existing arrows first
+      const existingArrows = header.querySelectorAll('.accordion-arrow');
+      existingArrows.forEach(arrow => arrow.remove());
       
       if (window.innerWidth <= 768) {
         // Mobile: Add accordion functionality
-        newHeader.style.cursor = 'pointer';
-        newHeader.style.display = 'flex';
-        newHeader.style.justifyContent = 'space-between';
-        newHeader.style.alignItems = 'center';
+        header.style.cursor = 'pointer';
+        header.style.display = 'flex';
+        header.style.justifyContent = 'space-between';
+        header.style.alignItems = 'center';
         
-        // Add arrow indicator
-        const arrow = document.createElement('span');
-        arrow.className = 'accordion-arrow';
-        arrow.innerHTML = '▼';
-        arrow.style.transition = 'transform 0.3s ease';
-        arrow.style.fontSize = '0.8rem';
-        newHeader.appendChild(arrow);
+        // Add arrow indicator only if it doesn't exist
+        if (!header.querySelector('.accordion-arrow')) {
+          const arrow = document.createElement('span');
+          arrow.className = 'accordion-arrow';
+          arrow.innerHTML = '▼';
+          arrow.style.transition = 'transform 0.3s ease';
+          arrow.style.fontSize = '0.9rem';
+          header.appendChild(arrow);
+        }
         
         // Initially hide content
         content.style.maxHeight = '0';
         content.style.overflow = 'hidden';
         content.style.transition = 'max-height 0.3s ease';
         
-        // Add click handler
-        newHeader.addEventListener('click', function() {
+        // Remove existing click listeners and add new one
+        const newHeader = header.cloneNode(true);
+        header.parentNode.replaceChild(newHeader, header);
+        
+        // Add click handler to new header
+        newHeader.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
           const arrow = newHeader.querySelector('.accordion-arrow');
           const isOpen = content.style.maxHeight !== '0px';
           
           if (isOpen) {
             // Close
             content.style.maxHeight = '0';
-            arrow.style.transform = 'rotate(0deg)';
+            if (arrow) arrow.style.transform = 'rotate(0deg)';
           } else {
             // Open
             content.style.maxHeight = content.scrollHeight + 'px';
-            arrow.style.transform = 'rotate(180deg)';
+            if (arrow) arrow.style.transform = 'rotate(180deg)';
           }
         });
+        
+        // Mark as initialized
+        newHeader.dataset.accordionInit = 'true';
       } else {
         // Desktop: Reset to normal
-        newHeader.style.cursor = 'default';
-        newHeader.style.display = 'block';
+        header.style.cursor = 'default';
+        header.style.display = 'block';
         content.style.maxHeight = 'none';
         content.style.overflow = 'visible';
+        
+        // Remove arrows on desktop
+        const arrows = header.querySelectorAll('.accordion-arrow');
+        arrows.forEach(arrow => arrow.remove());
+        
+        // Remove initialization marker
+        delete header.dataset.accordionInit;
       }
     }
   });
@@ -853,6 +877,18 @@ document.addEventListener('DOMContentLoaded', function() {
   initMobileFooterAccordion();
 });
 
+let resizeTimer;
 window.addEventListener('resize', function() {
-  setTimeout(initMobileFooterAccordion, 100);
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(function() {
+    // Reset all sections before reinitializing
+    const footerSections = document.querySelectorAll('.footer-section');
+    footerSections.forEach(section => {
+      const header = section.querySelector('h3');
+      if (header) {
+        delete header.dataset.accordionInit;
+      }
+    });
+    initMobileFooterAccordion();
+  }, 150);
 });
