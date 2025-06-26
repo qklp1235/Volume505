@@ -122,7 +122,7 @@ NODE_ENV=production
 
 # Domain Configuration
 DOMAIN=www.volume505.com
-ALLOWED_ORIGINS=https://www.volume505.com,https://volume505.com
+ALLOWED_ORIGINS=https://www.volume505.com, https://volume505.com
 
 # Perplexity AI API
 PERPLEXITY_API_KEY=your_perplexity_api_key_here

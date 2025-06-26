@@ -334,8 +334,8 @@ header {
     
     header {
         text-align: center;
-        margin-bottom: 50px;
-        order: 1;
+        margin-bottom: 30px;
+        order: 1; /* 메인 타이틀과 서브 타이틀이 맨 위 */
     }
     
     .main-title { 
@@ -348,10 +348,20 @@ header {
         margin-bottom: 0;
     }
     
-    /* Popular sites를 헤더 바로 아래에 배치 */
+    /* main 컨텐츠를 헤더 다음에 배치 */
+    #mainContent {
+        order: 2; /* 헤더 다음 */
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        flex: 1;
+    }
+    
+    /* Popular sites를 main 안에서 맨 위에 배치 */
     .all-sites-list {
-        order: 2;
-        margin: 0 0 50px 0 !important;
+        order: 1; /* main 안에서 첫 번째 */
+        margin: 0 0 30px 0 !important;
         width: 100%;
         max-width: 380px;
         align-self: center;
@@ -362,7 +372,7 @@ header {
         margin: 0 0 40px 0;
         width: 100%;
         max-width: 380px;
-        order: 3;
+        order: 2; /* main 안에서 두 번째 */
         align-self: center;
     }
     
@@ -389,7 +399,7 @@ header {
     .results-section {
         width: 100%;
         max-width: 400px;
-        order: 4; /* 인풋 섹션 다음 */
+        order: 3; /* main 안에서 세 번째 */
         align-self: center;
     }
     
@@ -418,21 +428,14 @@ header {
         box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
     }
     
-    /* main 컨텐츠 순서 설정 */
-    #mainContent {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        align-items: center;
-        flex: 1;
-    }
+
     
     /* 푸터 모바일 조정 */
     .footer {
         margin-top: auto;
         width: 100%;
         flex-shrink: 0;
-        order: 5; /* 마지막 배치 */
+        order: 3; /* 마지막 배치 */
     }
     
     .footer-content {
