@@ -315,11 +315,100 @@ header {
 }
 
 @media (max-width: 768px) {
-    .main-title { font-size: 2.8rem; }
-    .input-group { flex-wrap: wrap; }
-    #urlInput { width: 100%; order: 1; }
-    #countrySelect { order: 2; flex-grow: 1; }
-    #submitBtn { order: 3; flex-grow: 1; justify-content: center; }
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 0;
+    }
+    
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        min-height: 100vh;
+        width: 100%;
+        max-width: none;
+    }
+    
+    header {
+        text-align: center;
+        margin-bottom: 20px;
+        margin-top: -15vh; /* 메인 텍스트와 서브타이틀을 위로 올림 */
+    }
+    
+    .main-title { 
+        font-size: 2.5rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+        margin-bottom: 0;
+    }
+    
+    .input-section {
+        position: static; /* sticky에서 static으로 변경 */
+        margin: 20px 0;
+        width: 100%;
+        max-width: 400px;
+    }
+    
+    .input-group { 
+        flex-wrap: wrap; 
+    }
+    
+    #urlInput { 
+        width: 100%; 
+        order: 1; 
+    }
+    
+    #countrySelect { 
+        order: 2; 
+        flex-grow: 1; 
+    }
+    
+    #submitBtn { 
+        order: 3; 
+        flex-grow: 1; 
+        justify-content: center; 
+    }
+    
+    .results-section {
+        width: 100%;
+        max-width: 400px;
+    }
+    
+    /* Popular sites 섹션 모바일 조정 */
+    .all-sites-list {
+        margin: 30px 0 20px 0 !important;
+        width: 100%;
+        max-width: 350px;
+    }
+    
+    .sites-row {
+        gap: 16px !important;
+    }
+    
+    .popular-site {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+    }
+    
+    .popular-site img {
+        width: 28px !important;
+        height: 28px !important;
+    }
+    
+    /* 푸터 모바일 조정 */
+    .footer {
+        margin-top: auto;
+        width: 100%;
+    }
 }
 
 /* 모바일 디바이스에서 오버스크롤 방지 강화 */
