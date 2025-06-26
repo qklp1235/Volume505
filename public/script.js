@@ -539,7 +539,7 @@ class SiteInfoRequester {
 
         let speed = 8;
         let speedBoost = 1;
-        let lineCount = 0; // 줄바꿈 카운터
+        let charCount = 0; // 문자 카운터
         
         // 마우스가 summary 위에 있을 때 5% 가속
         const onMouseEnter = () => { speedBoost = 0.95; };
@@ -547,13 +547,36 @@ class SiteInfoRequester {
         element.addEventListener('mouseenter', onMouseEnter);
         element.addEventListener('mouseleave', onMouseLeave);
 
-        // AI 요약 카드의 위치를 동적으로 계산하는 함수
-        const scrollToAiContent = () => {
+        // AI 커서 위치를 뷰포트 중앙에 맞추는 함수
+        const scrollToAiCursor = () => {
+            const summaryCard = element.closest('.ai-summary-card');
+            if (summaryCard) {
+                // 현재 타이핑 중인 텍스트의 실제 높이 계산
+                const elementRect = element.getBoundingClientRect();
+                const cardRect = summaryCard.getBoundingClientRect();
+                
+                // AI 텍스트 컨테이너의 현재 높이를 기반으로 스크롤 위치 계산
+                const currentTextHeight = element.scrollHeight;
+                const cardTop = cardRect.top + window.pageYOffset;
+                
+                // 뷰포트 중앙에 현재 타이핑 위치가 오도록 계산
+                const viewportCenter = window.innerHeight / 2;
+                const targetScrollTop = cardTop + currentTextHeight - viewportCenter + 50;
+                
+                window.scrollTo({
+                    top: Math.max(0, targetScrollTop),
+                    behavior: 'smooth'
+                });
+            }
+        };
+
+        // 초기 스크롤 (AI 요약 카드가 보이도록)
+        const initialScroll = () => {
             const summaryCard = element.closest('.ai-summary-card');
             if (summaryCard) {
                 const rect = summaryCard.getBoundingClientRect();
                 const elementTop = rect.top + window.pageYOffset;
-                const offset = Math.max(100, window.innerHeight * 0.1); // 화면 상단에서 10% 위치
+                const offset = window.innerHeight * 0.3; // 화면 상단에서 30% 위치
                 
                 window.scrollTo({
                     top: elementTop - offset,
@@ -565,6 +588,7 @@ class SiteInfoRequester {
         return new Promise(resolve => {
             let i = 0;
             element.innerHTML = "";
+            
             function type() {
                 if (i < formattedText.length) {
                     const char = formattedText[i];
@@ -575,13 +599,9 @@ class SiteInfoRequester {
                             const tag = formattedText.substring(i, tagEndIndex + 1);
                             element.innerHTML += tag;
                             
-                            // <br> 태그가 추가될 때마다 줄바꿈 카운트 증가 및 스크롤
+                            // <br> 태그가 추가될 때마다 스크롤
                             if (tag === '<br>') {
-                                lineCount++;
-                                // 2줄마다 스크롤 (너무 자주 스크롤하지 않도록)
-                                if (lineCount % 2 === 0) {
-                                    scrollToAiContent();
-                                }
+                                scrollToAiCursor();
                             }
                             
                             i = tagEndIndex + 1; // 태그 끝 다음 위치로 이동
@@ -589,15 +609,22 @@ class SiteInfoRequester {
                             // 태그가 제대로 닫히지 않은 경우 단일 문자로 처리
                             element.innerHTML += char;
                             i++;
+                            charCount++;
                         }
                     } else {
                         element.innerHTML += char;
                         i++;
+                        charCount++;
                     }
                     
                     // 첫 번째 스크롤 (AI 요약이 시작될 때)
                     if (i === 1) {
-                        scrollToAiContent();
+                        initialScroll();
+                    }
+                    
+                    // 일정 문자 수마다 스크롤 업데이트 (더 부드러운 추적)
+                    if (charCount > 0 && charCount % 15 === 0) {
+                        scrollToAiCursor();
                     }
                     
                     setTimeout(type, speed * speedBoost);
@@ -605,9 +632,9 @@ class SiteInfoRequester {
                     element.removeEventListener('mouseenter', onMouseEnter);
                     element.removeEventListener('mouseleave', onMouseLeave);
                     
-                    // 타이핑 완료 후 최종 스크롤 (전체 내용이 보이도록)
+                    // 타이핑 완료 후 최종 스크롤 (전체 내용이 적절히 보이도록)
                     setTimeout(() => {
-                        scrollToAiContent();
+                        scrollToAiCursor();
                     }, 300);
                     
                     resolve();
