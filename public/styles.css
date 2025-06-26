@@ -432,7 +432,7 @@ header {
     
     /* 푸터 모바일 조정 */
     .footer {
-        margin-top: auto;
+        margin-top: 40px;
         width: 100%;
         flex-shrink: 0;
         order: 3; /* 마지막 배치 */
@@ -467,35 +467,138 @@ header {
         margin-bottom: 8px !important;
     }
     
+    /* 모바일 푸터 컨테이너 스타일 */
+    .footer-container {
+        background: rgba(255, 255, 255, 0.08) !important;
+        backdrop-filter: blur(10px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(10px) saturate(180%) !important;
+        border-radius: 20px 20px 0 0 !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-bottom: none !important;
+        margin: 0 !important;
+        padding: 25px 20px 20px 20px !important;
+        max-width: none !important;
+    }
+    
     /* 모바일 푸터 아코디언 스타일 */
+    .footer-section {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border-radius: 12px !important;
+        margin-bottom: 12px !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        overflow: hidden !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .footer-section:last-child {
+        margin-bottom: 0 !important;
+    }
+    
     .footer-section h3 {
-        padding: 15px 0 !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        padding: 18px 20px !important;
+        margin-bottom: 0 !important;
         cursor: pointer !important;
         -webkit-user-select: none !important;
         user-select: none !important;
         position: relative !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+        color: var(--c-text-primary) !important;
+        border-bottom: none !important;
+        transition: all 0.3s ease !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
     }
     
     .footer-section h3:hover {
-        background: rgba(255, 255, 255, 0.05) !important;
-        padding-left: 10px !important;
-        padding-right: 10px !important;
-        border-radius: 8px !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+        color: var(--c-text-primary) !important;
     }
     
     .footer-section h3::after {
         display: none !important; /* 기존 underline 제거 */
     }
     
+    .footer-section ul {
+        padding: 0 20px 18px 20px !important;
+        margin: 0 !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+    }
+    
+    .footer-section ul li {
+        margin-bottom: 12px !important;
+        transition: transform 0.2s ease !important;
+    }
+    
+    .footer-section ul li:last-child {
+        margin-bottom: 0 !important;
+    }
+    
+    .footer-section ul li a {
+        color: var(--c-text-secondary) !important;
+        font-size: 0.9rem !important;
+        font-weight: 400 !important;
+        text-decoration: none !important;
+        transition: all 0.2s ease !important;
+        display: block !important;
+        padding: 4px 0 !important;
+    }
+    
+    .footer-section ul li a:hover {
+        color: var(--c-text-primary) !important;
+        transform: translateX(4px) !important;
+    }
+    
     .accordion-arrow {
         color: var(--c-text-secondary) !important;
-        font-size: 0.8rem !important;
-        transition: transform 0.3s ease, color 0.2s !important;
+        font-size: 0.9rem !important;
+        transition: all 0.3s ease !important;
+        font-weight: 300 !important;
     }
     
     .footer-section h3:hover .accordion-arrow {
         color: var(--c-text-primary) !important;
+        transform: scale(1.1) !important;
+    }
+    
+    /* 푸터 바텀 스타일 개선 */
+    .footer-bottom {
+        margin-top: 25px !important;
+        padding-top: 20px !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background: rgba(255, 255, 255, 0.02) !important;
+        border-radius: 12px !important;
+        padding: 20px !important;
+    }
+    
+    .footer-logo {
+        margin-bottom: 15px !important;
+    }
+    
+    .footer-social {
+        margin-bottom: 15px !important;
+    }
+    
+    .footer-social a {
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 12px !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .footer-social a:hover {
+        background: var(--c-text-primary) !important;
+        border-color: var(--c-text-primary) !important;
+        transform: translateY(-2px) scale(1.05) !important;
+    }
+    
+    .footer-copyright p {
+        font-size: 0.85rem !important;
+        color: var(--c-text-secondary) !important;
+        margin: 0 !important;
     }
     
     /* 모바일에서 블러 효과 절반으로 감소 */
@@ -729,6 +832,35 @@ header {
     backdrop-filter: blur(7px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(7px) saturate(180%) !important;
   }
+  
+  /* 다크 모드 푸터 스타일 */
+  .footer-container {
+    background: rgba(30, 32, 34, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+  }
+  
+  .footer-section {
+    background: rgba(0, 0, 0, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+  }
+  
+  .footer-section h3:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+  
+  .footer-section ul {
+    border-top-color: rgba(255, 255, 255, 0.03) !important;
+  }
+  
+  .footer-bottom {
+    background: rgba(0, 0, 0, 0.08) !important;
+    border-top-color: rgba(255, 255, 255, 0.05) !important;
+  }
+  
+  .footer-social a {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+  }
 }
 
 @media (prefers-color-scheme: light) {
@@ -771,6 +903,35 @@ header {
   .input-section, .info-card, .ai-summary-card {
     backdrop-filter: blur(7px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(7px) saturate(180%) !important;
+  }
+  
+  /* 라이트 모드 푸터 스타일 */
+  .footer-container {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+  }
+  
+  .footer-section {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+  }
+  
+  .footer-section h3:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+  }
+  
+  .footer-section ul {
+    border-top-color: rgba(255, 255, 255, 0.1) !important;
+  }
+  
+  .footer-bottom {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-top-color: rgba(255, 255, 255, 0.15) !important;
+  }
+  
+  .footer-social a {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
   }
 }
 
