@@ -787,4 +787,72 @@ if (document.querySelector('.all-sites-list')) {
       }
     }
   });
-} 
+}
+
+// Mobile Footer Accordion functionality
+function initMobileFooterAccordion() {
+  const footerSections = document.querySelectorAll('.footer-section');
+  
+  footerSections.forEach(section => {
+    const header = section.querySelector('h3');
+    const content = section.querySelector('ul');
+    
+    if (header && content) {
+      // Remove existing listeners and arrows
+      header.replaceWith(header.cloneNode(true));
+      const newHeader = section.querySelector('h3');
+      
+      if (window.innerWidth <= 768) {
+        // Mobile: Add accordion functionality
+        newHeader.style.cursor = 'pointer';
+        newHeader.style.display = 'flex';
+        newHeader.style.justifyContent = 'space-between';
+        newHeader.style.alignItems = 'center';
+        
+        // Add arrow indicator
+        const arrow = document.createElement('span');
+        arrow.className = 'accordion-arrow';
+        arrow.innerHTML = '▼';
+        arrow.style.transition = 'transform 0.3s ease';
+        arrow.style.fontSize = '0.8rem';
+        newHeader.appendChild(arrow);
+        
+        // Initially hide content
+        content.style.maxHeight = '0';
+        content.style.overflow = 'hidden';
+        content.style.transition = 'max-height 0.3s ease';
+        
+        // Add click handler
+        newHeader.addEventListener('click', function() {
+          const arrow = newHeader.querySelector('.accordion-arrow');
+          const isOpen = content.style.maxHeight !== '0px';
+          
+          if (isOpen) {
+            // Close
+            content.style.maxHeight = '0';
+            arrow.style.transform = 'rotate(0deg)';
+          } else {
+            // Open
+            content.style.maxHeight = content.scrollHeight + 'px';
+            arrow.style.transform = 'rotate(180deg)';
+          }
+        });
+      } else {
+        // Desktop: Reset to normal
+        newHeader.style.cursor = 'default';
+        newHeader.style.display = 'block';
+        content.style.maxHeight = 'none';
+        content.style.overflow = 'visible';
+      }
+    }
+  });
+}
+
+// Initialize on page load and window resize
+document.addEventListener('DOMContentLoaded', function() {
+  initMobileFooterAccordion();
+});
+
+window.addEventListener('resize', function() {
+  setTimeout(initMobileFooterAccordion, 100);
+});

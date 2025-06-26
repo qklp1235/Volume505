@@ -326,45 +326,43 @@ header {
     .container {
         display: flex;
         flex-direction: column;
-        padding: 20px 20px 0 20px;
+        padding: 30px 20px 0 20px;
         flex: 1;
         width: 100%;
         max-width: none;
-        min-height: 100vh;
     }
     
     header {
         text-align: center;
-        margin-bottom: 0;
-        margin-top: 0;
-        order: 1; /* 맨 위 배치 */
+        margin-bottom: 50px;
+        order: 1;
     }
     
     .main-title { 
-        font-size: 2.5rem;
-        margin-bottom: 0.3rem;
+        font-size: 2.8rem;
+        margin-bottom: 0.5rem;
     }
     
     .subtitle {
-        font-size: 1rem;
-        margin-bottom: 30px;
+        font-size: 1.1rem;
+        margin-bottom: 0;
     }
     
-    /* Popular sites를 헤더와 인풋 사이에 배치 */
+    /* Popular sites를 헤더 바로 아래에 배치 */
     .all-sites-list {
-        order: 2; /* 헤더 다음 */
-        margin: 0 0 30px 0 !important;
+        order: 2;
+        margin: 0 0 50px 0 !important;
         width: 100%;
-        max-width: 350px;
+        max-width: 380px;
         align-self: center;
     }
     
     .input-section {
         position: static;
-        margin: 0 0 30px 0;
+        margin: 0 0 40px 0;
         width: 100%;
-        max-width: 400px;
-        order: 3; /* Popular sites 다음 */
+        max-width: 380px;
+        order: 3;
         align-self: center;
     }
     
@@ -396,19 +394,28 @@ header {
     }
     
     .sites-row {
-        gap: 20px !important;
+        gap: 24px !important;
         justify-content: center !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .sites-row:last-child {
+        margin-bottom: 0 !important;
     }
     
     .popular-site {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         padding: 0;
+        min-width: 60px;
+        text-align: center;
     }
     
     .popular-site img {
-        width: 32px !important;
-        height: 32px !important;
-        margin-bottom: 6px !important;
+        width: 36px !important;
+        height: 36px !important;
+        margin-bottom: 8px !important;
+        border-radius: 8px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
     }
     
     /* main 컨텐츠 순서 설정 */
@@ -457,6 +464,37 @@ header {
         margin-bottom: 8px !important;
     }
     
+    /* 모바일 푸터 아코디언 스타일 */
+    .footer-section h3 {
+        padding: 15px 0 !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        cursor: pointer !important;
+        -webkit-user-select: none !important;
+        user-select: none !important;
+        position: relative !important;
+    }
+    
+    .footer-section h3:hover {
+        background: rgba(255, 255, 255, 0.05) !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        border-radius: 8px !important;
+    }
+    
+    .footer-section h3::after {
+        display: none !important; /* 기존 underline 제거 */
+    }
+    
+    .accordion-arrow {
+        color: var(--c-text-secondary) !important;
+        font-size: 0.8rem !important;
+        transition: transform 0.3s ease, color 0.2s !important;
+    }
+    
+    .footer-section h3:hover .accordion-arrow {
+        color: var(--c-text-primary) !important;
+    }
+    
     /* 모바일에서 블러 효과 절반으로 감소 */
     .sticky-blur-overlay {
         -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
@@ -471,8 +509,9 @@ header {
     .popular-sites {
         backdrop-filter: blur(4px) saturate(120%) !important;
         -webkit-backdrop-filter: blur(4px) saturate(120%) !important;
-        padding: 20px 16px 16px 16px !important;
+        padding: 24px 20px 20px 20px !important;
         margin: 0 !important;
+        border-radius: 18px !important;
     }
     
     .background-blur {
