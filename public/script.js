@@ -46,9 +46,14 @@ class SiteInfoRequester {
         e.preventDefault();
         const url = this.urlInput.value.trim();
         if (!this.isValidUrl(url)) {
-            this.showToast('유효한 URL을 입력하세요.');
+            this.showToast('Please enter a valid URL.');
             this.urlInput.focus();
             return;
+        }
+
+        // Track analysis start
+        if (typeof window.va !== 'undefined') {
+            window.va('track', 'Analysis Started', { url: url });
         }
         // 분석 시작 시 스크롤 애니메이션 즉시 실행
         window.scrollTo({
@@ -61,9 +66,28 @@ class SiteInfoRequester {
         try {
             const siteInfo = await this.fetchSiteInfo(url);
             this.displayResults(siteInfo);
+            
+            // Track successful analysis
+            if (typeof window.va !== 'undefined') {
+                window.va('track', 'Analysis Completed', { 
+                    url: url,
+                    statusCode: siteInfo.statusCode,
+                    isHttps: siteInfo.isHttps,
+                    country: this.countrySelect.value
+                });
+            }
+            
             await this.handleAiSummary(siteInfo);
         } catch (error) {
             this.displayError(error.message);
+            
+            // Track analysis errors
+            if (typeof window.va !== 'undefined') {
+                window.va('track', 'Analysis Error', { 
+                    url: url,
+                    error: error.message
+                });
+            }
         } finally {
             this.setLoading(false);
         }
@@ -94,7 +118,7 @@ class SiteInfoRequester {
             const responseTime = Date.now() - startTime;
 
             if (response.status && response.status !== 200) {
-                throw new Error(`사이트 접근 실패: HTTP ${response.status}`);
+                throw new Error(`Site access failed: HTTP ${response.status}`);
             }
 
             // HTML 파싱
@@ -114,7 +138,7 @@ class SiteInfoRequester {
                 responseTime: responseTime,
                 contentType: response.headers.get('content-type') || 'text/html',
                 isHttps: url.startsWith('https://'),
-                sslStatus: url.startsWith('https://') ? '활성화' : '비활성화',
+                sslStatus: url.startsWith('https://') ? 'Enabled' : 'Disabled',
                 securityHeaders: this.extractSecurityHeadersFromHeaders(response.headers),
                 metaTags: this.extractMetaTags(doc),
                 
@@ -147,14 +171,14 @@ class SiteInfoRequester {
             };
 
         } catch (error) {
-            console.error('사이트 정보 요청 실패:', error);
-            throw new Error(`사이트 정보를 가져올 수 없습니다: ${error.message}`);
+            console.error('Site information request failed:', error);
+            throw new Error(`Unable to fetch site information: ${error.message}`);
         }
     }
 
     extractTitle(doc) {
         const title = doc.querySelector('title');
-        return title ? title.textContent.trim() : '제목 없음';
+        return title ? title.textContent.trim() : 'No title';
     }
 
     extractDescription(doc) {
@@ -414,6 +438,11 @@ class SiteInfoRequester {
         this.summaryContent.classList.add('loading');
         this.summaryContent.textContent = 'Analyzing content...';
         
+        // Track AI Summary start
+        if (typeof window.va !== 'undefined') {
+            window.va('track', 'AI Summary Started', { url: siteInfo.url });
+        }
+        
         try {
             const summaryText = await this.generateAiSummary(siteInfo);
             this.summaryContent.classList.remove('loading');
@@ -421,14 +450,30 @@ class SiteInfoRequester {
             this.summaryContent.classList.add('typing');
             await this.typeWriter(summaryText, this.summaryContent);
             this.summaryContent.classList.remove('typing');
+            
+            // Track AI Summary completion
+            if (typeof window.va !== 'undefined') {
+                window.va('track', 'AI Summary Completed', { 
+                    url: siteInfo.url,
+                    summaryLength: summaryText.length
+                });
+            }
         } catch (e) {
             this.summaryContent.classList.remove('loading');
             this.summaryContent.textContent = "Could not generate AI summary due to an error.";
+            
+            // Track AI Summary error
+            if (typeof window.va !== 'undefined') {
+                window.va('track', 'AI Summary Error', { 
+                    url: siteInfo.url,
+                    error: e.message
+                });
+            }
         }
     }
 
     async generateAiSummary(siteInfo) {
-        // 사이트 주요 정보 추출
+        // Extract main site information
         const { title, description, mainContent } = siteInfo;
         let content = '';
         if (title) content += `Title: ${title}\n`;
@@ -693,7 +738,7 @@ document.addEventListener('DOMContentLoaded', function() {
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateFooterLogoTheme);
 });
 
-// 인기 사이트 클릭 시 인풋에 URL 입력 (포커스 X)
+// Popular site click - input URL without focus
 if (document.querySelector('.all-sites-list')) {
   document.querySelector('.all-sites-list').addEventListener('click', function(e) {
     const a = e.target.closest('.popular-site');
@@ -702,7 +747,16 @@ if (document.querySelector('.all-sites-list')) {
       const urlInput = document.getElementById('urlInput');
       if (urlInput) {
         urlInput.value = a.dataset.url;
-        // focus() 호출하지 않음
+        
+        // Track popular site click
+        if (typeof window.va !== 'undefined') {
+          window.va('track', 'Popular Site Clicked', { 
+            siteName: a.title || a.textContent.trim(),
+            url: a.dataset.url
+          });
+        }
+        
+        // Don't call focus()
       }
     }
   });
