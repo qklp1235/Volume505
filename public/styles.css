@@ -409,6 +409,26 @@ header {
         margin-top: auto;
         width: 100%;
     }
+    
+    /* 모바일에서 블러 효과 절반으로 감소 */
+    .sticky-blur-overlay {
+        -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
+        backdrop-filter: blur(12px) saturate(160%) !important;
+    }
+    
+    .input-section, .info-card, .ai-summary-card {
+        backdrop-filter: blur(7px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(7px) saturate(180%) !important;
+    }
+    
+    .popular-sites {
+        backdrop-filter: blur(4px) saturate(120%) !important;
+        -webkit-backdrop-filter: blur(4px) saturate(120%) !important;
+    }
+    
+    .background-blur {
+        filter: blur(12px) brightness(1.08) !important;
+    }
 }
 
 /* 모바일 디바이스에서 오버스크롤 방지 강화 */
@@ -612,6 +632,14 @@ header {
   }
 }
 
+/* 다크모드 + 모바일에서 블러 감소 */
+@media (prefers-color-scheme: dark) and (max-width: 768px) {
+  .input-section, .info-card, .ai-summary-card {
+    backdrop-filter: blur(7px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(7px) saturate(180%) !important;
+  }
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     --c-bg: #f7f7f7;
@@ -644,6 +672,14 @@ header {
   .results-section {
     background: transparent !important;
     border: none !important;
+  }
+}
+
+/* 라이트모드 + 모바일에서 블러 감소 */
+@media (prefers-color-scheme: light) and (max-width: 768px) {
+  .input-section, .info-card, .ai-summary-card {
+    backdrop-filter: blur(7px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(7px) saturate(180%) !important;
   }
 }
 
