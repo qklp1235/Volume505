@@ -494,11 +494,28 @@ class SiteInfoRequester {
 
         let speed = 8;
         let speedBoost = 1;
+        let lineCount = 0; // 줄바꿈 카운터
+        
         // 마우스가 summary 위에 있을 때 5% 가속
         const onMouseEnter = () => { speedBoost = 0.95; };
         const onMouseLeave = () => { speedBoost = 1.05; };
         element.addEventListener('mouseenter', onMouseEnter);
         element.addEventListener('mouseleave', onMouseLeave);
+
+        // AI 요약 카드의 위치를 동적으로 계산하는 함수
+        const scrollToAiContent = () => {
+            const summaryCard = element.closest('.ai-summary-card');
+            if (summaryCard) {
+                const rect = summaryCard.getBoundingClientRect();
+                const elementTop = rect.top + window.pageYOffset;
+                const offset = Math.max(100, window.innerHeight * 0.1); // 화면 상단에서 10% 위치
+                
+                window.scrollTo({
+                    top: elementTop - offset,
+                    behavior: 'smooth'
+                });
+            }
+        };
 
         return new Promise(resolve => {
             let i = 0;
@@ -512,6 +529,16 @@ class SiteInfoRequester {
                         if (tagEndIndex !== -1) {
                             const tag = formattedText.substring(i, tagEndIndex + 1);
                             element.innerHTML += tag;
+                            
+                            // <br> 태그가 추가될 때마다 줄바꿈 카운트 증가 및 스크롤
+                            if (tag === '<br>') {
+                                lineCount++;
+                                // 2줄마다 스크롤 (너무 자주 스크롤하지 않도록)
+                                if (lineCount % 2 === 0) {
+                                    scrollToAiContent();
+                                }
+                            }
+                            
                             i = tagEndIndex + 1; // 태그 끝 다음 위치로 이동
                         } else {
                             // 태그가 제대로 닫히지 않은 경우 단일 문자로 처리
@@ -523,18 +550,21 @@ class SiteInfoRequester {
                         i++;
                     }
                     
-                    // 스크롤을 좀 더 천천히, 그리고 조건부로
-                    if (i % 50 === 0) { // 50글자마다 스크롤
-                        window.scrollTo({
-                            top: 560,
-                            behavior: 'smooth'
-                        });
+                    // 첫 번째 스크롤 (AI 요약이 시작될 때)
+                    if (i === 1) {
+                        scrollToAiContent();
                     }
                     
                     setTimeout(type, speed * speedBoost);
                 } else {
                     element.removeEventListener('mouseenter', onMouseEnter);
                     element.removeEventListener('mouseleave', onMouseLeave);
+                    
+                    // 타이핑 완료 후 최종 스크롤 (전체 내용이 보이도록)
+                    setTimeout(() => {
+                        scrollToAiContent();
+                    }, 300);
+                    
                     resolve();
                 }
             }
