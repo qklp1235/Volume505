@@ -326,18 +326,18 @@ header {
     .container {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
+        padding: 20px 20px 0 20px;
         flex: 1;
         width: 100%;
         max-width: none;
+        min-height: 100vh;
     }
     
     header {
         text-align: center;
-        margin-bottom: 20px;
-        margin-top: -15vh; /* 메인 텍스트와 서브타이틀을 위로 올림 */
+        margin-bottom: 0;
+        margin-top: 0;
+        order: 1; /* 맨 위 배치 */
     }
     
     .main-title { 
@@ -347,14 +347,25 @@ header {
     
     .subtitle {
         font-size: 1rem;
-        margin-bottom: 0;
+        margin-bottom: 30px;
+    }
+    
+    /* Popular sites를 헤더와 인풋 사이에 배치 */
+    .all-sites-list {
+        order: 2; /* 헤더 다음 */
+        margin: 0 0 30px 0 !important;
+        width: 100%;
+        max-width: 350px;
+        align-self: center;
     }
     
     .input-section {
-        position: static; /* sticky에서 static으로 변경 */
-        margin: 20px 0;
+        position: static;
+        margin: 0 0 30px 0;
         width: 100%;
         max-width: 400px;
+        order: 3; /* Popular sites 다음 */
+        align-self: center;
     }
     
     .input-group { 
@@ -380,27 +391,33 @@ header {
     .results-section {
         width: 100%;
         max-width: 400px;
-    }
-    
-    /* Popular sites 섹션 모바일 조정 */
-    .all-sites-list {
-        margin: 30px 0 20px 0 !important;
-        width: 100%;
-        max-width: 350px;
+        order: 4; /* 인풋 섹션 다음 */
+        align-self: center;
     }
     
     .sites-row {
-        gap: 16px !important;
+        gap: 20px !important;
+        justify-content: center !important;
     }
     
     .popular-site {
-        font-size: 0.9rem;
-        padding: 8px 12px;
+        font-size: 0.85rem;
+        padding: 0;
     }
     
     .popular-site img {
-        width: 28px !important;
-        height: 28px !important;
+        width: 32px !important;
+        height: 32px !important;
+        margin-bottom: 6px !important;
+    }
+    
+    /* main 컨텐츠 순서 설정 */
+    #mainContent {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        flex: 1;
     }
     
     /* 푸터 모바일 조정 */
@@ -408,6 +425,7 @@ header {
         margin-top: auto;
         width: 100%;
         flex-shrink: 0;
+        order: 5; /* 마지막 배치 */
     }
     
     .footer-content {
@@ -453,6 +471,8 @@ header {
     .popular-sites {
         backdrop-filter: blur(4px) saturate(120%) !important;
         -webkit-backdrop-filter: blur(4px) saturate(120%) !important;
+        padding: 20px 16px 16px 16px !important;
+        margin: 0 !important;
     }
     
     .background-blur {
