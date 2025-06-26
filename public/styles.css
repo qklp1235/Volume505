@@ -25,6 +25,25 @@ Concept: A high-contrast, minimalist design using only shades of black and white
     box-sizing: border-box;
 }
 
+html {
+    /* 오버스크롤 시 배경 처리 */
+    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed;
+    background-size: cover;
+    background-color: var(--c-bg);
+    min-height: 100vh;
+    height: 100%;
+    /* 오버스크롤 동작 제어 */
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
+    -webkit-overflow-scrolling: touch;
+    /* 터치 동작 제어 */
+    touch-action: pan-y;
+    /* iOS Safari 바운스 방지 */
+    width: 100%;
+    overflow-x: hidden;
+}
+
 body {
     font-family: var(--font-family);
     background-color: var(--c-bg);
@@ -37,6 +56,20 @@ body {
     min-height: 100vh;
     scroll-behavior: smooth !important;
     scroll-padding-top: 0;
+    /* 모바일 오버스크롤 방지 */
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
+    -webkit-overflow-scrolling: touch;
+    /* iOS Safari 탄성 스크롤 제어 */
+    position: relative;
+    /* 터치 동작 제어 */
+    touch-action: pan-y;
+    /* Safari 고무줄 효과 방지 */
+    height: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .container {
@@ -44,6 +77,9 @@ body {
     margin: 0 auto;
     padding: 60px 20px;
     min-height: 150vh;
+    /* 오버스크롤 방지 */
+    overscroll-behavior: none;
+    position: relative;
 }
 
 header {
@@ -286,6 +322,30 @@ header {
     #submitBtn { order: 3; flex-grow: 1; justify-content: center; }
 }
 
+/* 모바일 디바이스에서 오버스크롤 방지 강화 */
+@media (pointer: coarse) and (hover: none) {
+    html, body {
+        overscroll-behavior: none !important;
+        overscroll-behavior-y: none !important;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: pan-y !important;
+    }
+    
+    body {
+        /* iOS Safari 고무줄 효과 완전 차단 */
+        position: relative;
+        overflow-x: hidden !important;
+    }
+}
+
+/* iOS Safari 전용 설정 */
+@supports (-webkit-touch-callout: none) {
+    html, body {
+        overscroll-behavior: none !important;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
 .ai-summary-card {
     background: transparent !important;
     border: none !important;
@@ -425,10 +485,14 @@ header {
     --c-accent: #f7f7f7;
     --c-accent-hover: #e4e6eb;
   }
+  html {
+    background: url('https://wallpapers.com/images/hd/sunset-sky-night-stars-435cn0f9a6bn3vx9.webp') no-repeat center center fixed !important;
+    background-size: cover !important;
+    background-color: #181a1b !important;
+  }
   body {
     background: url('https://wallpapers.com/images/hd/sunset-sky-night-stars-435cn0f9a6bn3vx9.webp') no-repeat center center fixed !important;
     background-size: cover !important;
-    scroll-sp
   }
   .input-section, .info-card, .ai-summary-card {
     background: rgba(30, 32, 34, 0.22) !important;
@@ -469,6 +533,11 @@ header {
     --c-text-secondary: #555555;
     --c-accent: #000000;
     --c-accent-hover: #222222;
+  }
+  html {
+    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed;
+    background-size: cover;
+    background-color: #f7f7f7;
   }
   body {
     background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed;
