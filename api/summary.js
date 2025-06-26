@@ -18,10 +18,18 @@ export default async function handler(req, res) {
 
   const { content } = req.body;
   
+  // 요청 본문 검증
+  if (!content) {
+    return res.status(400).json({ 
+      error: 'Content is required in request body' 
+    });
+  }
+  
   // API 키 확인
   if (!process.env.PERPLEXITY_API_KEY) {
+    console.error('PERPLEXITY_API_KEY not found in environment variables');
     return res.status(500).json({ 
-      error: 'Perplexity API key not found. Please set PERPLEXITY_API_KEY in Vercel environment variables.' 
+      error: 'AI service configuration error. Please contact administrator.' 
     });
   }
   
@@ -51,15 +59,29 @@ export default async function handler(req, res) {
     });
     
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`Perplexity API Error: ${response.status} ${response.statusText}`, errorText);
       throw new Error(`API request failed: ${response.status} ${response.statusText}`);
     }
     
     const data = await response.json();
-    const summary = data.choices?.[0]?.message?.content || 'Summary could not be generated.';
+    
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      console.error('Unexpected API response format:', data);
+      throw new Error('Invalid response format from AI service');
+    }
+    
+    const summary = data.choices[0].message.content || 'Summary could not be generated.';
     
     res.status(200).json({ summary });
   } catch (err) {
-    console.error('Perplexity API Error:', err);
-    res.status(500).json({ error: `AI Summary failed: ${err.message}` });
+    console.error('AI Summary Error:', {
+      message: err.message,
+      stack: err.stack,
+      timestamp: new Date().toISOString()
+    });
+    res.status(500).json({ 
+      error: `AI Summary failed: ${err.message}` 
+    });
   }
 } 

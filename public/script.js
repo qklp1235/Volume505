@@ -444,14 +444,29 @@ class SiteInfoRequester {
     }
 
     async fetchAiSummaryFromServer(siteContent) {
-        const res = await fetch('http://localhost:3001/api/summary', {
+        // Use relative path for Vercel serverless function in production
+        // and localhost for local development
+        const apiUrl = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3001/api/summary' 
+            : '/api/summary';
+            
+        const res = await fetch(apiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ content: siteContent })
         });
         
         if (!res.ok) {
-            throw new Error(`Server error: ${res.status} ${res.statusText}`);
+            let errorMessage = `Server error: ${res.status} ${res.statusText}`;
+            try {
+                const errorData = await res.json();
+                if (errorData.error) {
+                    errorMessage = errorData.error;
+                }
+            } catch (e) {
+                // If response is not JSON, use the default error message
+            }
+            throw new Error(errorMessage);
         }
         
         const data = await res.json();
