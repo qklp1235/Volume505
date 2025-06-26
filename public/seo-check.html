@@ -82,14 +82,23 @@
                     </div>
                 </div>
             </section>
-            <div class="info-grid">
-                <article class="info-card ai-summary-card" style="grid-column: 1 / -1;" aria-labelledby="aiSummaryTitle">
-                    <h3 id="aiSummaryTitle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -3px; margin-right: 8px;" aria-hidden="true"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path><path d="M5 3v4"></path><path d="M19 17v4"></path><path d="M3 5h4"></path><path d="M17 19h4"></path></svg>
-                        AI Summary
-                    </h3>
-                    <p class="ai-summary-content" id="aiSummaryContent"></p>
-                </article>
+            <section class="results-section" id="resultsSection" style="display: none;" aria-live="polite">
+                <header class="info-header">
+                    <h2>SEO Analysis Report</h2>
+                    <div class="status-indicator" id="statusIndicator" aria-live="polite"></div>
+                </header>
+                
+                <div class="info-grid">
+                    <article class="info-card seo-score-card" style="grid-column: 1 / -1;" aria-labelledby="seoScoreTitle">
+                        <h3 id="seoScoreTitle">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -3px; margin-right: 8px;" aria-hidden="true"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg>
+                            SEO Score: <span id="seoScore">--</span>/100
+                        </h3>
+                        <div class="seo-progress-bar">
+                            <div class="seo-progress" id="seoProgress" style="width: 0%"></div>
+                        </div>
+                        <p class="seo-summary" id="seoSummary">URL을 입력하고 SEO 체크를 시작하세요.</p>
+                    </article>
                 <section id="seoResult" class="info-card" style="display:none;">
                     <h2 style="font-size:1.2em; margin-bottom:1em;">SEO 결과</h2>
                     <ul style="line-height:2;">
