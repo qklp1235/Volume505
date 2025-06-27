@@ -177,3 +177,185 @@ sudo nginx -t
 **도메인**: [www.volume505.com](https://www.volume505.com)  
 **버전**: 1.0.0  
 **최종 업데이트**: 2024년 
+
+---
+
+# 🌐 Volume505 Site Info Requester
+
+A web application that requests and displays site information for a given URL.
+
+**🌍 Domain**: [www.volume505.com](https://www.volume505.com)
+
+## ✨ Main Features
+
+- **Basic Site Info**: Extracts URL, title, and description
+- **Technical Info**: HTTP status code, response time, content type
+- **Meta Info**: Keywords, language, encoding information
+- **Security Info**: HTTPS status, SSL certificate status, security headers
+- **AI Summary**: Automatic site content summary via Perplexity AI
+- **Real-time Status Display**: Loading, success, and error indicators
+- **Responsive Design**: Usable on both mobile and desktop
+
+## 🚀 How to Use
+
+1. Visit [www.volume505.com](https://www.volume505.com) in your web browser
+2. Enter the website address you want to check in the URL input field
+3. Click the "Request Info" button or press Enter
+4. Site information will be displayed in card format
+
+## 🛠️ Tech Stack
+
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **Backend**: Node.js, Express.js
+- **AI Integration**: Perplexity AI API
+- **Server**: Nginx, PM2
+- **SSL**: Let's Encrypt
+- **Proxy**: AllOrigins API (CORS bypass)
+
+## 📁 File Structure
+
+```
+├── index.html              # Main HTML file
+├── styles.css              # CSS stylesheet
+├── script.js               # JavaScript logic
+├── server.js               # Express server
+├── package.json            # Node.js dependencies
+├── ecosystem.config.js     # PM2 configuration
+├── nginx.conf              # Nginx configuration
+├── deploy.sh               # Deployment script
+├── env.example             # Environment variable template
+├── Logo/                   # Logo images
+└── README.md               # Project documentation
+```
+
+## 🌐 Domain Connection & Deployment
+
+### 1. Server Preparation
+- Ubuntu 20.04+ server
+- Domain DNS configured (www.volume505.com → server IP)
+
+### 2. Automatic Deployment
+```bash
+# Run deployment script
+./deploy.sh
+```
+
+### 3. Manual Setup
+```bash
+# Install dependencies
+npm install
+
+# Set environment variables
+cp env.example .env
+# Edit .env file to set API keys
+
+# Start server with PM2
+pm2 start ecosystem.config.js --env production
+pm2 save
+pm2 startup
+
+# Install SSL certificate
+sudo certbot --nginx -d www.volume505.com -d volume505.com
+```
+
+## 🔧 Feature Details
+
+### Site Info Extraction
+- Analyzes meta tags via HTML parsing
+- Supports Open Graph tags
+- Detects various encoding types
+
+### AI Summary Feature
+- Integrates Perplexity AI API
+- Automatically summarizes site content in Korean
+- Results structured in Markdown format
+
+### CORS Bypass
+- Uses AllOrigins proxy service to bypass CORS restrictions
+- Enables safe access to external sites
+
+### Security Settings
+- Sets security headers via Helmet.js
+- Only allowed domains can access via CORS policy
+- SSL/TLS encryption
+
+### User Experience
+- Loading spinner and status indicators
+- Automatically adds URL protocol (https://)
+- Keyboard shortcut support (Ctrl+Enter)
+- Responsive grid layout
+
+## 🎨 Design Features
+
+- **Gradient Background**: Modern visual effect
+- **Card-based Layout**: Information categorized by type
+- **Hover Effects**: Interactive user experience
+- **Animations**: Smooth transitions
+- **Volume505 Branding**: Custom logo and colors
+
+## ⚙️ Environment Variable Setup
+
+The `.env` file requires the following settings:
+
+```env
+# Server Configuration
+PORT=3001
+NODE_ENV=production
+
+# Domain Configuration
+DOMAIN=www.volume505.com
+ALLOWED_ORIGINS=https://www.volume505.com, https://volume505.com
+
+# Perplexity AI API
+PERPLEXITY_API_KEY=your_perplexity_api_key_here
+
+# Security
+SESSION_SECRET=your_session_secret_here
+```
+
+## 📊 Monitoring
+
+### Health Check
+```bash
+curl https://www.volume505.com/health
+```
+
+### Check PM2 Status
+```bash
+pm2 status
+pm2 logs volume505-site-info
+```
+
+### Check Nginx Status
+```bash
+sudo systemctl status nginx
+sudo nginx -t
+```
+
+## ⚠️ Notes
+
+- Some websites may not provide information due to CORS policies
+- Errors may occur on some sites due to proxy service limitations
+- Security info is limited for non-HTTPS sites
+- A Perplexity API key is required
+
+## 🔮 Future Improvements
+
+- [ ] Support for more proxy services
+- [ ] Site screenshot feature
+- [ ] SEO score calculation
+- [ ] Performance analysis feature
+- [ ] History saving feature
+- [ ] User dashboard
+- [ ] API usage monitoring
+
+## 📝 License
+
+This project is distributed under the MIT License.
+
+---
+
+**Developer**: Volume505  
+**Domain**: [www.volume505.com](https://www.volume505.com)  
+**Version**: 1.0.0  
+**Last Updated**: 2024 
