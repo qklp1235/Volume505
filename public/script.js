@@ -815,11 +815,12 @@ function initMobileFooterAccordion() {
         header.style.alignItems = 'center';
         
         // Add arrow indicator only if it doesn't exist
-        if (!header.querySelector('.accordion-arrow')) {
-          const arrow = document.createElement('span');
+        let arrow = header.querySelector('.accordion-arrow');
+        if (!arrow) {
+          arrow = document.createElement('span');
           arrow.className = 'accordion-arrow';
           arrow.innerHTML = '▼';
-          arrow.style.transition = 'transform 0.3s ease';
+          arrow.style.transition = 'transform 0.3s cubic-bezier(.4,2,.6,1), color 0.2s';
           arrow.style.fontSize = '0.9rem';
           header.appendChild(arrow);
         }
@@ -844,11 +845,11 @@ function initMobileFooterAccordion() {
           if (isOpen) {
             // Close
             content.style.maxHeight = '0';
-            if (arrow) arrow.style.transform = 'rotate(0deg)';
+            if (arrow) arrow.classList.remove('open');
           } else {
             // Open
             content.style.maxHeight = content.scrollHeight + 'px';
-            if (arrow) arrow.style.transform = 'rotate(180deg)';
+            if (arrow) arrow.classList.add('open');
           }
         });
         

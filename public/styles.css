@@ -553,13 +553,13 @@ header {
     .accordion-arrow {
         color: var(--c-text-secondary) !important;
         font-size: 0.9rem !important;
-        transition: all 0.3s ease !important;
+        transition: transform 0.3s cubic-bezier(.4,2,.6,1), color 0.2s !important;
         font-weight: 300 !important;
+        display: inline-block;
     }
     
-    .footer-section h3:hover .accordion-arrow {
-        color: var(--c-text-primary) !important;
-        transform: scale(1.1) !important;
+    .accordion-arrow.open {
+        transform: rotate(180deg) !important;
     }
     
     /* 푸터 바텀 스타일 개선 */
@@ -622,6 +622,14 @@ header {
     
     .background-blur {
         filter: blur(12px) brightness(1.08) !important;
+    }
+}
+
+@media (min-width: 769px) {
+    /* 데스크톱에서는 기존 호버 효과 유지 */
+    .footer-section h3:hover .accordion-arrow {
+        color: var(--c-text-primary) !important;
+        transform: scale(1.1) !important;
     }
 }
 
