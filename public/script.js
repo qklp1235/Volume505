@@ -14,6 +14,11 @@ class SiteInfoRequester {
         this.summaryCard = document.querySelector('.ai-summary-card');
         this.summaryContent = document.getElementById('aiSummaryContent');
         
+        // 드래그 관련 변수 추가
+        this.draggedCard = null;
+        this.dragOffset = { x: 0, y: 0 };
+        this.originalPosition = { x: 0, y: 0 };
+        
         this.sampleTopSites = {
             KR: ['naver.com', 'google.co.kr', 'youtube.com', 'daum.net', 'kakao.com', 'tistory.com', 'coupang.com', 'samsung.com', 'namu.wiki', 'netflix.com'],
             US: ['google.com', 'youtube.com', 'facebook.com', 'amazon.com', 'wikipedia.org', 'yahoo.com', 'reddit.com', 'twitter.com', 'instagram.com', 'netflix.com'],
@@ -33,6 +38,12 @@ class SiteInfoRequester {
         // 오버레이/블러 효과 트리거
         this.urlInput.addEventListener('focus', () => this.activateOverlay(true));
         this.urlInput.addEventListener('blur', () => this.activateOverlay(false));
+        
+        // 전역 드래그 이벤트 리스너 추가
+        document.addEventListener('mousemove', (e) => this.handleDrag(e));
+        document.addEventListener('mouseup', () => this.stopDrag());
+        document.addEventListener('touchmove', (e) => this.handleTouchDrag(e), { passive: false });
+        document.addEventListener('touchend', () => this.stopDrag());
     }
 
     autoPrependProtocol() {
@@ -684,6 +695,34 @@ class SiteInfoRequester {
             inputSection.style.transform = active ? 'translateY(-80px) scale(1)' : 'translateY(0) scale(1)';
             inputSection.style.zIndex = active ? '10' : '';
             inputSection.style.boxShadow = active ? '0 8px 32px 0 rgba(31,38,135,0.22)' : '';
+        }
+    }
+
+    // 드래그 관련 메서드
+    handleDrag(e) {
+        if (this.draggedCard) {
+            const dx = e.clientX - this.dragOffset.x;
+            const dy = e.clientY - this.dragOffset.y;
+            this.draggedCard.style.left = dx + 'px';
+            this.draggedCard.style.top = dy + 'px';
+        }
+    }
+
+    stopDrag() {
+        if (this.draggedCard) {
+            this.draggedCard.style.left = '';
+            this.draggedCard.style.top = '';
+            this.draggedCard = null;
+        }
+    }
+
+    handleTouchDrag(e) {
+        if (this.draggedCard) {
+            const touch = e.touches[0];
+            const dx = touch.clientX - this.dragOffset.x;
+            const dy = touch.clientY - this.dragOffset.y;
+            this.draggedCard.style.left = dx + 'px';
+            this.draggedCard.style.top = dy + 'px';
         }
     }
 }

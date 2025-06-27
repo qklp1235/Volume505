@@ -272,7 +272,7 @@ header {
 }
 
 .label {
-    color: #000000;
+    color: var(--c-text-primary);
     font-weight: 400;
 }
 
