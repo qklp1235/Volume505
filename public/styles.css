@@ -504,6 +504,22 @@ header {
         padding-bottom: 12px !important;
         font-size: 1.08rem !important;
     }
+    .all-sites-list {
+        margin-top: 12px !important;
+        margin-bottom: 18px !important;
+        gap: 10px !important;
+    }
+    .sites-row {
+        gap: 14px !important;
+    }
+    .input-section {
+        margin-top: 0 !important;
+        margin-bottom: 18px !important;
+        padding: 10px !important;
+    }
+    .container {
+        padding-top: 12px !important;
+    }
 }
 
 @media (prefers-color-scheme: dark) and (max-width: 768px) {
