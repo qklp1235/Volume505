@@ -10,6 +10,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="container">
+        <section class="input-section" aria-labelledby="analyzeFormLabel">
+            <form id="urlForm" autocomplete="off" aria-describedby="analyzeFormDesc">
+                <div class="input-group">
+                    <label for="urlInput" id="analyzeFormLabel" class="visually-hidden">Website URL</label>
+                    <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"></path></svg>
+                    <input 
+                    type="url" 
+                    id="urlInput" 
+                    placeholder="https://example.com"
+                    required
+                    aria-required="true"
+                    aria-label="Website URL"
+                    inputmode="url"
+                >
+                <label for="countrySelect" class="visually-hidden">Select Region</label>
+                <select id="countrySelect" title="Select Region" aria-label="Select Region">
+                    <option value="KR">KR</option>
+                    <option value="US">US</option>
+                    <option value="JP">JP</option>
+                    <option value="global">Global</option>
+                </select>
+                <button type="submit" id="submitBtn" aria-label="Analyze Website">
+                    <span class="btn-text">Analyze</span>
+                    <span class="loading-spinner" style="display: none;" aria-hidden="true"></span>
+                </button>
+            </div>
+        </form>
+    </section>
     <header role="banner">
         <h1 class="main-title">Volume 505</h1>
         <p class="subtitle">A minimalist tool for website analysis.</p>
