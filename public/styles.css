@@ -585,13 +585,13 @@ header {
 .ai-summary-card {
     position: relative;
     z-index: 30;
+    opacity: 1;
+    transform: none;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     padding: 24px;
     border-radius: 12px;
-    opacity: 0;
-    transform: translateY(-5px);
     box-shadow: 0 15px 35px rgba(0,0,0,0.1);
 }
 
