@@ -583,6 +583,8 @@ header {
 }
 
 .ai-summary-card {
+    position: relative;
+    z-index: 30;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
