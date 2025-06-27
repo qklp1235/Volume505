@@ -315,313 +315,159 @@ header {
 }
 
 @media (max-width: 768px) {
-    body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-        padding: 0 !important;
-        padding-bottom: 0 !important;
+    body, .footer, .footer-container {
+        background: #f5f5f7 !important;
+        color: #222 !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        backdrop-filter: none !important;
     }
-    
-    .container {
-        display: flex;
-        flex-direction: column;
-        padding: 30px 20px 0 20px;
-        flex: 1;
-        width: 100%;
-        max-width: none;
-    }
-    
-    header {
-        text-align: center;
-        margin-bottom: 30px;
-        order: 1; /* 메인 타이틀과 서브 타이틀이 맨 위 */
-    }
-    
-    .main-title { 
-        font-size: 2.8rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .subtitle {
-        font-size: 1.1rem;
-        margin-bottom: 0;
-    }
-    
-    /* main 컨텐츠를 헤더 다음에 배치 */
-    #mainContent {
-        order: 2; /* 헤더 다음 */
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        align-items: center;
-        flex: 1;
-    }
-    
-    /* Popular sites를 main 안에서 맨 위에 배치 */
-    .all-sites-list {
-        order: 1; /* main 안에서 첫 번째 */
-        margin: 0 0 30px 0 !important;
-        width: 100%;
-        max-width: 380px;
-        align-self: center;
-    }
-    
-    .input-section {
-        position: static;
-        margin: 0 0 40px 0;
-        width: 100%;
-        max-width: 380px;
-        order: 2; /* main 안에서 두 번째 */
-        align-self: center;
-    }
-    
-    .input-group { 
-        flex-wrap: wrap; 
-    }
-    
-    #urlInput { 
-        width: 100%; 
-        order: 1; 
-    }
-    
-    #countrySelect { 
-        order: 2; 
-        flex-grow: 1; 
-    }
-    
-    #submitBtn { 
-        order: 3; 
-        flex-grow: 1; 
-        justify-content: center; 
-    }
-    
-    .results-section {
-        width: 100%;
-        max-width: 400px;
-        order: 3; /* main 안에서 세 번째 */
-        align-self: center;
-    }
-    
-    .sites-row {
-        gap: 24px !important;
-        justify-content: center !important;
-        margin-bottom: 20px !important;
-    }
-    
-    .sites-row:last-child {
-        margin-bottom: 0 !important;
-    }
-    
-    .popular-site {
-        font-size: 0.9rem;
-        padding: 0;
-        min-width: 60px;
-        text-align: center;
-    }
-    
-    .popular-site img {
-        width: 36px !important;
-        height: 36px !important;
-        margin-bottom: 8px !important;
-        border-radius: 8px !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-    }
-    
-
-    
-    /* 푸터 모바일 조정 */
-    .footer {
-        margin-top: 40px;
-        width: 100%;
-        flex-shrink: 0;
-        order: 3; /* 마지막 배치 */
-    }
-    
-    .footer-content {
-        flex-direction: column !important;
-        align-items: center !important;
-        gap: 20px !important;
-        text-align: center;
-    }
-    
-    .footer-section {
-        min-width: unset !important;
-        width: 100% !important;
-        text-align: center !important;
-    }
-    
-    .footer-bottom {
-        flex-direction: column !important;
-        gap: 15px !important;
-        text-align: center !important;
-        padding-top: 15px !important;
-        margin-bottom: 15px !important;
-    }
-    
-    .footer-section h3 {
-        margin-bottom: 15px !important;
-    }
-    
-    .footer-section ul li {
-        margin-bottom: 8px !important;
-    }
-    
-    /* 모바일 푸터 컨테이너 스타일 */
     .footer-container {
-        background: rgba(255, 255, 255, 0.08) !important;
-        backdrop-filter: blur(10px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(10px) saturate(180%) !important;
-        border-radius: 20px 20px 0 0 !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        border-bottom: none !important;
+        border: none !important;
         margin: 0 !important;
-        padding: 25px 20px 20px 20px !important;
+        padding: 0 0 10px 0 !important;
         max-width: none !important;
     }
-    
-    /* 모바일 푸터 아코디언 스타일 */
     .footer-section {
-        background: rgba(255, 255, 255, 0.03) !important;
-        border-radius: 12px !important;
-        margin-bottom: 12px !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        overflow: hidden !important;
-        transition: all 0.3s ease !important;
-    }
-    
-    .footer-section:last-child {
-        margin-bottom: 0 !important;
-    }
-    
-    .footer-section h3 {
-        padding: 18px 20px !important;
-        margin-bottom: 0 !important;
-        cursor: pointer !important;
-        -webkit-user-select: none !important;
-        user-select: none !important;
-        position: relative !important;
-        font-weight: 600 !important;
-        font-size: 1rem !important;
-        color: var(--c-text-primary) !important;
-        border-bottom: none !important;
-        transition: all 0.3s ease !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-    }
-    
-    .footer-section h3:hover {
-        background: rgba(255, 255, 255, 0.08) !important;
-        color: var(--c-text-primary) !important;
-    }
-    
-    .footer-section h3::after {
-        display: none !important; /* 기존 underline 제거 */
-    }
-    
-    .footer-section ul {
-        padding: 0 20px 18px 20px !important;
+        background: none !important;
+        border-radius: 0 !important;
         margin: 0 !important;
-        border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+        border: none !important;
+        border-bottom: 1px solid #e0e0e5 !important;
+        overflow: visible !important;
+        transition: none !important;
+        padding: 0 !important;
     }
-    
-    .footer-section ul li {
-        margin-bottom: 12px !important;
-        transition: transform 0.2s ease !important;
+    .footer-section:last-child {
+        border-bottom: none !important;
     }
-    
-    .footer-section ul li:last-child {
-        margin-bottom: 0 !important;
+    .footer-section h3 {
+        padding: 18px 0 18px 0 !important;
+        margin: 0 !important;
+        cursor: pointer !important;
+        font-weight: 600 !important;
+        font-size: 1.05rem !important;
+        color: #222 !important;
+        border: none !important;
+        border-bottom: 1px solid #e0e0e5 !important;
+        background: none !important;
+        border-radius: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        transition: none !important;
     }
-    
-    .footer-section ul li a {
-        color: var(--c-text-secondary) !important;
-        font-size: 0.9rem !important;
-        font-weight: 400 !important;
-        text-decoration: none !important;
-        transition: all 0.2s ease !important;
-        display: block !important;
-        padding: 4px 0 !important;
-    }
-    
-    .footer-section ul li a:hover {
-        color: var(--c-text-primary) !important;
-        transform: translateX(4px) !important;
-    }
-    
     .accordion-arrow {
-        color: var(--c-text-secondary) !important;
-        font-size: 0.9rem !important;
-        transition: transform 0.3s cubic-bezier(.4,2,.6,1), color 0.2s !important;
-        font-weight: 300 !important;
-        display: inline-block;
+        margin-left: auto !important;
+        font-size: 1.1rem !important;
+        color: #888 !important;
+        float: right !important;
+        transition: transform 0.2s !important;
+        font-weight: 400 !important;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
     }
-    
     .accordion-arrow.open {
         transform: rotate(180deg) !important;
     }
-    
-    /* 푸터 바텀 스타일 개선 */
+    .footer-section ul {
+        padding: 0 0 12px 0 !important;
+        background: none !important;
+        border: none !important;
+    }
+    .footer-section ul li {
+        margin: 0 !important;
+        padding: 7px 0 7px 0 !important;
+        border: none !important;
+        background: none !important;
+    }
+    .footer-section ul li a {
+        color: #222 !important;
+        font-size: 0.97rem !important;
+        font-weight: 400 !important;
+        text-decoration: none !important;
+        background: none !important;
+        border: none !important;
+        transition: color 0.18s !important;
+    }
+    .footer-section ul li a:hover {
+        color: #111 !important;
+        text-decoration: underline !important;
+    }
+    .footer-bottom, .footer-logo, .footer-social, .footer-copyright {
+        background: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        border: none !important;
+        text-align: center !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        color: #222 !important;
+    }
     .footer-bottom {
-        margin-top: 25px !important;
-        padding-top: 20px !important;
-        border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-        background: rgba(255, 255, 255, 0.02) !important;
-        border-radius: 12px !important;
-        padding: 20px !important;
+        border-top: 1px solid #e0e0e5 !important;
+        margin-top: 18px !important;
+        padding: 12px 0 0 0 !important;
     }
-    
-    .footer-logo {
-        margin-bottom: 15px !important;
+    .footer-logo span {
+        font-size: 1.05rem !important;
+        font-weight: 600 !important;
+        color: #222 !important;
+        margin-left: 6px !important;
     }
-    
-    .footer-social {
-        margin-bottom: 15px !important;
-    }
-    
     .footer-social a {
-        background: rgba(255, 255, 255, 0.08) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        width: 44px !important;
-        height: 44px !important;
-        border-radius: 12px !important;
-        transition: all 0.3s ease !important;
+        background: none !important;
+        border: none !important;
+        width: 38px !important;
+        height: 38px !important;
+        border-radius: 0 !important;
+        color: #888 !important;
+        margin: 0 4px !important;
+        font-size: 1.1rem !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: color 0.18s !important;
     }
-    
     .footer-social a:hover {
-        background: var(--c-text-primary) !important;
-        border-color: var(--c-text-primary) !important;
-        transform: translateY(-2px) scale(1.05) !important;
+        color: #111 !important;
+        background: none !important;
+        border: none !important;
+        transform: none !important;
     }
-    
     .footer-copyright p {
-        font-size: 0.85rem !important;
-        color: var(--c-text-secondary) !important;
-        margin: 0 !important;
+        font-size: 0.89rem !important;
+        color: #888 !important;
+        margin: 12px 0 0 0 !important;
+        background: none !important;
+        border: none !important;
     }
-    
-    /* 모바일에서 블러 효과 절반으로 감소 */
-    .sticky-blur-overlay {
-        -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
-        backdrop-filter: blur(12px) saturate(160%) !important;
+}
+
+@media (prefers-color-scheme: dark) and (max-width: 768px) {
+    body, .footer, .footer-container {
+        background: #18181a !important;
+        color: #eee !important;
     }
-    
-    .input-section, .info-card, .ai-summary-card {
-        backdrop-filter: blur(7px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(7px) saturate(180%) !important;
+    .footer-section, .footer-section h3 {
+        border-bottom: 1px solid #333 !important;
+        color: #eee !important;
     }
-    
-    .popular-sites {
-        backdrop-filter: blur(4px) saturate(120%) !important;
-        -webkit-backdrop-filter: blur(4px) saturate(120%) !important;
-        padding: 24px 20px 20px 20px !important;
-        margin: 0 !important;
-        border-radius: 18px !important;
+    .footer-section ul li a {
+        color: #eee !important;
     }
-    
-    .background-blur {
-        filter: blur(12px) brightness(1.08) !important;
+    .footer-section ul li a:hover {
+        color: #fff !important;
+    }
+    .footer-bottom, .footer-logo, .footer-social, .footer-copyright {
+        color: #eee !important;
+    }
+    .footer-bottom {
+        border-top: 1px solid #333 !important;
+    }
+    .accordion-arrow {
+        color: #aaa !important;
     }
 }
 
