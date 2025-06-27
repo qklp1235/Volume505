@@ -443,6 +443,23 @@ header {
         background: none !important;
         border: none !important;
     }
+    .input-group {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+    #urlInput, #countrySelect, #submitBtn {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+    }
+    #submitBtn {
+        margin-top: 2px !important;
+        padding-top: 12px !important;
+        padding-bottom: 12px !important;
+        font-size: 1.08rem !important;
+    }
 }
 
 @media (prefers-color-scheme: dark) and (max-width: 768px) {
