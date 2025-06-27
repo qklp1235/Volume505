@@ -200,62 +200,106 @@ header {
 .info-header h2 {
     font-size: 1.5rem;
     font-weight: 600;
+    color: var(--c-text-primary);
 }
 
 .status-indicator {
     padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 13px;
+    border-radius: 6px;
+    font-size: 0.875rem;
     font-weight: 500;
-    border: 1px solid var(--c-border-hover);
     background: var(--c-surface);
-    color: var(--c-text-secondary);
-    z-index: 22;
-    position: relative;
+    border: 1px solid var(--c-border);
 }
 
 .status-indicator.success {
-    border-color: var(--c-text-primary);
-    color: var(--c-text-primary);
+    color: #059669;
+    border-color: #d1fae5;
+    background: #f0fdf4;
 }
 
 .status-indicator.error {
-    border-color: var(--c-text-primary);
-    color: var(--c-text-primary);
-    font-weight: 600;
+    color: #dc2626;
+    border-color: #fecaca;
+    background: #fef2f2;
 }
 
 .info-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
 }
 
 .info-card {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 24px;
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
     border-radius: 12px;
-    opacity: 0;
-    transform: translateY(15px);
-    animation: card-fade-in 0.5s forwards;
-    z-index: 21;
+    padding: 20px;
+    transition: all 0.3s ease;
+    animation: card-fade-in 0.6s ease-out;
     position: relative;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .info-card:hover {
     border-color: var(--c-border-hover);
-    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
 }
 
 .info-card h3 {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--c-border);
     color: var(--c-text-primary);
+    margin-bottom: 16px;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: cursor 0.2s ease;
+}
+
+.info-card h3:active {
+    cursor: grabbing;
+}
+
+/* 드래그 중인 카드 스타일 */
+.info-card.dragging {
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    transform: rotate(2deg);
+    transition: none;
+}
+
+.info-card.dragging h3 {
+    cursor: grabbing;
+}
+
+/* 드래그 가능한 카드 헤더 스타일 */
+.info-card h3[data-draggable="true"] {
+    position: relative;
+    padding-right: 24px;
+}
+
+.info-card h3[data-draggable="true"]::after {
+    content: "⋮⋮";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: var(--c-text-secondary);
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.info-card:hover h3[data-draggable="true"]::after {
+    opacity: 1;
+}
+
+.info-card.dragging h3[data-draggable="true"]::after {
+    opacity: 1;
+    color: var(--c-accent);
 }
 
 .info-item {
@@ -534,8 +578,55 @@ header {
 }
 
 .ai-summary-card h3 {
-    display: flex;
-    align-items: center;
+    color: var(--c-text-primary);
+    margin-bottom: 16px;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: cursor 0.2s ease;
+}
+
+.ai-summary-card h3:active {
+    cursor: grabbing;
+}
+
+/* AI 요약 카드 드래그 중 스타일 */
+.ai-summary-card.dragging {
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    transform: rotate(2deg);
+    transition: none;
+}
+
+.ai-summary-card.dragging h3 {
+    cursor: grabbing;
+}
+
+/* AI 요약 카드 헤더 드래그 스타일 */
+.ai-summary-card h3[data-draggable="true"] {
+    position: relative;
+    padding-right: 24px;
+}
+
+.ai-summary-card h3[data-draggable="true"]::after {
+    content: "⋮⋮";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: var(--c-text-secondary);
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.ai-summary-card:hover h3[data-draggable="true"]::after {
+    opacity: 1;
+}
+
+.ai-summary-card.dragging h3[data-draggable="true"]::after {
+    opacity: 1;
+    color: var(--c-accent);
 }
 
 .ai-summary-content {
@@ -1275,4 +1366,53 @@ header {
 #submitBtn .btn-text {
   font-weight: 500;
   font-size: 1rem;
+}
+
+/* SEO 점수 카드 드래그 스타일 */
+.seo-score-card h3 {
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: cursor 0.2s ease;
+}
+
+.seo-score-card h3:active {
+    cursor: grabbing;
+}
+
+.seo-score-card.dragging {
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    transform: rotate(2deg);
+    transition: none;
+}
+
+.seo-score-card.dragging h3 {
+    cursor: grabbing;
+}
+
+.seo-score-card h3[data-draggable="true"] {
+    position: relative;
+    padding-right: 24px;
+}
+
+.seo-score-card h3[data-draggable="true"]::after {
+    content: "⋮⋮";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: var(--c-text-secondary);
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.seo-score-card:hover h3[data-draggable="true"]::after {
+    opacity: 1;
+}
+
+.seo-score-card.dragging h3[data-draggable="true"]::after {
+    opacity: 1;
+    color: var(--c-accent);
 } 

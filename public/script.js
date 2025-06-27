@@ -44,6 +44,9 @@ class SiteInfoRequester {
         document.addEventListener('mouseup', () => this.stopDrag());
         document.addEventListener('touchmove', (e) => this.handleTouchDrag(e), { passive: false });
         document.addEventListener('touchend', () => this.stopDrag());
+        
+        // 페이지 로드 시 모든 카드에 드래그 기능 추가
+        this.setupGlobalDragHandlers();
     }
 
     autoPrependProtocol() {
@@ -382,6 +385,117 @@ class SiteInfoRequester {
         this.resultsSection.style.display = 'block';
         this.errorMessage.style.display = 'none';
         if (this.summaryCard) this.summaryCard.style.display = 'none';
+        
+        // 드래그 기능 추가
+        this.setupDragHandlers();
+    }
+
+    // 드래그 핸들러 설정
+    setupDragHandlers() {
+        const cards = document.querySelectorAll('.info-card');
+        cards.forEach(card => {
+            const header = card.querySelector('h3');
+            if (header) {
+                header.setAttribute('data-draggable', 'true');
+                
+                // 마우스 이벤트
+                header.addEventListener('mousedown', (e) => this.startDrag(e, card));
+                
+                // 터치 이벤트
+                header.addEventListener('touchstart', (e) => this.startTouchDrag(e, card), { passive: false });
+            }
+        });
+    }
+
+    // 마우스 드래그 시작
+    startDrag(e, card) {
+        e.preventDefault();
+        this.draggedCard = card;
+        this.draggedCard.classList.add('dragging');
+        
+        const rect = card.getBoundingClientRect();
+        this.dragOffset = {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        };
+        
+        // 카드를 절대 위치로 설정
+        card.style.position = 'fixed';
+        card.style.left = rect.left + 'px';
+        card.style.top = rect.top + 'px';
+        card.style.width = rect.width + 'px';
+        card.style.zIndex = '1000';
+    }
+
+    // 터치 드래그 시작
+    startTouchDrag(e, card) {
+        e.preventDefault();
+        this.draggedCard = card;
+        this.draggedCard.classList.add('dragging');
+        
+        const touch = e.touches[0];
+        const rect = card.getBoundingClientRect();
+        this.dragOffset = {
+            x: touch.clientX - rect.left,
+            y: touch.clientY - rect.top
+        };
+        
+        // 카드를 절대 위치로 설정
+        card.style.position = 'fixed';
+        card.style.left = rect.left + 'px';
+        card.style.top = rect.top + 'px';
+        card.style.width = rect.width + 'px';
+        card.style.zIndex = '1000';
+    }
+
+    // 드래그 처리
+    handleDrag(e) {
+        if (this.draggedCard) {
+            e.preventDefault();
+            const x = e.clientX - this.dragOffset.x;
+            const y = e.clientY - this.dragOffset.y;
+            
+            // 화면 경계 내에서만 이동
+            const maxX = window.innerWidth - this.draggedCard.offsetWidth;
+            const maxY = window.innerHeight - this.draggedCard.offsetHeight;
+            
+            this.draggedCard.style.left = Math.max(0, Math.min(x, maxX)) + 'px';
+            this.draggedCard.style.top = Math.max(0, Math.min(y, maxY)) + 'px';
+        }
+    }
+
+    // 터치 드래그 처리
+    handleTouchDrag(e) {
+        if (this.draggedCard) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const x = touch.clientX - this.dragOffset.x;
+            const y = touch.clientY - this.dragOffset.y;
+            
+            // 화면 경계 내에서만 이동
+            const maxX = window.innerWidth - this.draggedCard.offsetWidth;
+            const maxY = window.innerHeight - this.draggedCard.offsetHeight;
+            
+            this.draggedCard.style.left = Math.max(0, Math.min(x, maxX)) + 'px';
+            this.draggedCard.style.top = Math.max(0, Math.min(y, maxY)) + 'px';
+        }
+    }
+
+    // 드래그 중지
+    stopDrag() {
+        if (this.draggedCard) {
+            this.draggedCard.classList.remove('dragging');
+            
+            // 카드를 원래 위치로 복원
+            setTimeout(() => {
+                this.draggedCard.style.position = '';
+                this.draggedCard.style.left = '';
+                this.draggedCard.style.top = '';
+                this.draggedCard.style.width = '';
+                this.draggedCard.style.zIndex = '';
+                this.draggedCard = null;
+            }, 100);
+        }
     }
 
     setText(id, value) {
@@ -454,6 +568,9 @@ class SiteInfoRequester {
             window.va('track', 'AI Summary Started', { url: siteInfo.url });
         }
         
+        // AI 요약 카드에도 드래그 기능 추가
+        this.setupAiSummaryDragHandler();
+        
         try {
             const summaryText = await this.generateAiSummary(siteInfo);
             this.summaryContent.classList.remove('loading');
@@ -479,6 +596,22 @@ class SiteInfoRequester {
                     url: siteInfo.url,
                     error: e.message
                 });
+            }
+        }
+    }
+
+    // AI 요약 카드 드래그 핸들러 설정
+    setupAiSummaryDragHandler() {
+        if (this.summaryCard) {
+            const header = this.summaryCard.querySelector('h3');
+            if (header) {
+                header.setAttribute('data-draggable', 'true');
+                
+                // 마우스 이벤트
+                header.addEventListener('mousedown', (e) => this.startDrag(e, this.summaryCard));
+                
+                // 터치 이벤트
+                header.addEventListener('touchstart', (e) => this.startTouchDrag(e, this.summaryCard), { passive: false });
             }
         }
     }
@@ -698,32 +831,24 @@ class SiteInfoRequester {
         }
     }
 
-    // 드래그 관련 메서드
-    handleDrag(e) {
-        if (this.draggedCard) {
-            const dx = e.clientX - this.dragOffset.x;
-            const dy = e.clientY - this.dragOffset.y;
-            this.draggedCard.style.left = dx + 'px';
-            this.draggedCard.style.top = dy + 'px';
-        }
-    }
-
-    stopDrag() {
-        if (this.draggedCard) {
-            this.draggedCard.style.left = '';
-            this.draggedCard.style.top = '';
-            this.draggedCard = null;
-        }
-    }
-
-    handleTouchDrag(e) {
-        if (this.draggedCard) {
-            const touch = e.touches[0];
-            const dx = touch.clientX - this.dragOffset.x;
-            const dy = touch.clientY - this.dragOffset.y;
-            this.draggedCard.style.left = dx + 'px';
-            this.draggedCard.style.top = dy + 'px';
-        }
+    // 전역 드래그 핸들러 설정 (모든 페이지에서 작동)
+    setupGlobalDragHandlers() {
+        // 페이지 로드 후 약간의 지연을 두고 드래그 핸들러 설정
+        setTimeout(() => {
+            const allCards = document.querySelectorAll('.info-card, .ai-summary-card, .seo-score-card');
+            allCards.forEach(card => {
+                const header = card.querySelector('h3');
+                if (header && !header.hasAttribute('data-draggable')) {
+                    header.setAttribute('data-draggable', 'true');
+                    
+                    // 마우스 이벤트
+                    header.addEventListener('mousedown', (e) => this.startDrag(e, card));
+                    
+                    // 터치 이벤트
+                    header.addEventListener('touchstart', (e) => this.startTouchDrag(e, card), { passive: false });
+                }
+            });
+        }, 100);
     }
 }
 
