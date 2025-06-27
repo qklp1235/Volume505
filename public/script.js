@@ -1,3 +1,7 @@
+// 클래스 외부에 전역 변수로 마지막 요약 요청 시간 저장
+let lastAiSummaryTime = 0;
+const AI_SUMMARY_COOLDOWN = 180000; // 3분(180,000ms)
+
 class SiteInfoRequester {
     constructor() {
         this.form = document.getElementById('urlForm');
@@ -557,6 +561,15 @@ class SiteInfoRequester {
     }
 
     async handleAiSummary(siteInfo) {
+        // 3분 쿨타임 체크
+        const now = Date.now();
+        if (now - lastAiSummaryTime < AI_SUMMARY_COOLDOWN) {
+            const remain = Math.ceil((AI_SUMMARY_COOLDOWN - (now - lastAiSummaryTime)) / 1000);
+            this.showToast(`AI Summary is limited to once every 3 minutes. Please wait ${remain} seconds.`);
+            return;
+        }
+        lastAiSummaryTime = now;
+
         if (!this.summaryCard || !this.summaryContent) return;
 
         this.summaryCard.style.display = 'block';
