@@ -315,12 +315,11 @@ header {
 }
 
 @media (max-width: 768px) {
-    body, .footer, .footer-container {
-        background: #f5f5f7 !important;
-        color: #222 !important;
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        backdrop-filter: none !important;
+    html, body {
+        background-color: #f5f5f7 !important;
+    }
+    .footer, .footer-container {
+        background-color: transparent !important;
     }
     .footer-container {
         border: none !important;
@@ -463,9 +462,11 @@ header {
 }
 
 @media (prefers-color-scheme: dark) and (max-width: 768px) {
-    body, .footer, .footer-container {
-        background: #18181a !important;
-        color: #eee !important;
+    html, body {
+        background-color: #18181a !important;
+    }
+    .footer, .footer-container {
+        background-color: transparent !important;
     }
     .footer-section, .footer-section h3 {
         border-bottom: 1px solid #333 !important;
