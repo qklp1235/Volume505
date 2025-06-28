@@ -526,6 +526,19 @@ header {
     .container {
         padding-top: 12px !important;
     }
+    .notion-footer,
+    .footer-container {
+        background: rgba(30, 30, 34, 0.85) !important;
+        box-shadow: none !important;
+        border-top: 1px solid #222 !important;
+    }
+    @media (prefers-color-scheme: light) {
+        .notion-footer,
+        .footer-container {
+            background: rgba(255,255,255,0.92) !important;
+            border-top: 1px solid #e0e0e5 !important;
+        }
+    }
 }
 
 @media (prefers-color-scheme: dark) and (max-width: 768px) {
@@ -1450,6 +1463,15 @@ header {
 @media (max-width: 768px) {
   .notion-footer,
   .footer-container {
-    /* Restore mobile background if needed (existing code remains) */
+    background: rgba(30, 30, 34, 0.85) !important;
+    box-shadow: none !important;
+    border-top: 1px solid #222 !important;
+  }
+  @media (prefers-color-scheme: light) {
+    .notion-footer,
+    .footer-container {
+      background: rgba(255,255,255,0.92) !important;
+      border-top: 1px solid #e0e0e5 !important;
+    }
   }
 } 
