@@ -838,7 +838,7 @@ class SiteInfoRequester {
         if (subTitle) subTitle.classList.toggle('blurred-title', active);
         if (inputSection) {
             inputSection.style.transition = 'transform 0.6s cubic-bezier(.4,2,.6,1), box-shadow 0.3s';
-            inputSection.style.transform = active ? 'translateY(-80px) scale(1)' : 'translateY(0) scale(1)';
+            inputSection.style.transform = active ? 'translateY(-20px) scale(1)' : 'translateY(0) scale(1)';
             inputSection.style.zIndex = active ? '10' : '';
             inputSection.style.boxShadow = active ? '0 8px 32px 0 rgba(31,38,135,0.22)' : '';
         }
