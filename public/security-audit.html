@@ -2,212 +2,188 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Security Audit | Volume 505</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <header role="banner">
-        <h1 class="main-title">Security Audit</h1>
-        <p class="subtitle">A minimalist tool for website security auditing.</p>
+        <h1 class="main-title">Volume 505</h1>
+        <p class="subtitle">A minimalist tool for website analysis.</p>
     </header>
-    <div class="sticky-blur-overlay"></div>
     <div class="top-blur-mask"></div>
     <div class="container">
         <main id="mainContent" tabindex="-1">
-            <section class="input-section" aria-labelledby="secFormLabel">
-                <form id="secForm" autocomplete="off">
+            <div class="sticky-blur-overlay"></div>
+            <div class="all-sites-list" style="display:flex; flex-direction:column; align-items:center; gap:18px; margin: 40px 0 32px 0;">
+                <div class="sites-row" style="display:flex; justify-content:center; gap:24px;">
+                    <a class="popular-site" href="#" data-url="https://www.google.com" target="_self" rel="noopener" title="Google">
+                        <span class="site-icon" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Favicon_2025.svg/1920px-Google_Favicon_2025.svg.png" alt="Google" width="36" height="36" />
+                        </span>
+                        <span>Google</span>
+                    </a>
+                    <a class="popular-site" href="#" data-url="https://www.facebook.com" target="_self" rel="noopener" title="Facebook">
+                        <span class="site-icon" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/2023_Facebook_icon.svg/1200px-2023_Facebook_icon.svg.png?20231011122028" alt="Facebook" width="36" height="36" />
+                        </span>
+                        <span>Facebook</span>
+                    </a>
+                    <a class="popular-site" href="#" data-url="https://www.youtube.com" target="_self" rel="noopener" title="YouTube">
+                        <span class="site-icon" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube" width="36" height="36" />
+                        </span>
+                        <span>YouTube</span>
+                    </a>
+                    <a class="popular-site" href="#" data-url="https://www.threads.net" target="_self" rel="noopener" title="Threads">
+                        <span class="site-icon" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/9/9d/Threads_%28app%29_logo.svg" alt="Threads" width="36" height="36" />
+                        </span>
+                        <span>Threads</span>
+                    </a>
+                </div>
+                <div class="sites-row" style="display:flex; justify-content:center; gap:24px;">
+                    <a class="popular-site" href="#" data-url="https://www.blueskyweb.xyz" target="_self" rel="noopener" title="Bluesky">
+                        <span class="site-icon" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/f/fc/Bluesky_butterfly-logo.svg" alt="Bluesky" width="36" height="36" />
+                        </span>
+                        <span>Bluesky</span>
+                    </a>
+                    <a class="popular-site" href="#" data-url="https://www.mastodon.social" target="_self" rel="noopener" title="Mastodon">
+                        <span class="site-icon" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/4/48/Mastodon_Logotype_%28Simple%29.svg" alt="Mastodon" width="36" height="36" />
+                        </span>
+                        <span>Mastodon</span>
+                    </a>
+                    <a class="popular-site" href="#" data-url="https://www.notion.so" target="_self" rel="noopener" title="Notion">
+                        <span class="site-icon" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Notion-logo.svg" alt="Notion" width="36" height="36" />
+                        </span>
+                        <span>Notion</span>
+                    </a>
+                </div>
+            </div>
+            <section class="input-section" aria-labelledby="analyzeFormLabel">
+                <form id="urlForm" autocomplete="off" aria-describedby="analyzeFormDesc">
                     <div class="input-group">
-                        <label for="urlInput" id="secFormLabel" class="visually-hidden">Website URL</label>
+                        <label for="urlInput" id="analyzeFormLabel" class="visually-hidden">Website URL</label>
                         <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"></path></svg>
                         <input 
-                            type="url" 
-                            id="urlInput" 
-                            placeholder="https://example.com"
-                            required
-                            aria-required="true"
-                            aria-label="Website URL"
-                            inputmode="url"
-                        >
-                        <button type="submit" id="submitBtn" aria-label="Security Audit">
-                            <span class="btn-text">Security Audit</span>
-                        </button>
-                    </div>
-                </form>
-            </section>
-            <section class="results-section" id="resultsSection" style="display: none;" aria-live="polite">
-                <header class="info-header">
-                    <h2>Security Audit Report</h2>
-                    <div class="status-indicator" id="statusIndicator" aria-live="polite"></div>
-                </header>
-                
-                <div class="info-grid">
-                    <article class="info-card security-score-card" style="grid-column: 1 / -1;" aria-labelledby="securityScoreTitle">
-                        <h3 id="securityScoreTitle">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -3px; margin-right: 8px;" aria-hidden="true"><path d="M9 12l2 2 4-4"></path><path d="M21 2l-9 9-4-4-6 6"></path><path d="M21 21V9"></path><path d="M21 9H9"></path></svg>
-                            Security Score: <span id="securityScore">--</span>/100
-                        </h3>
-                        <div class="security-progress-bar">
-                            <div class="security-progress" id="securityProgress" style="width: 0%"></div>
-                        </div>
-                        <p class="security-summary" id="securitySummary">Enter a URL to start security audit.</p>
-                    </article>
+                        type="url" 
+                        id="urlInput" 
+                        placeholder="https://example.com"
+                        required
+                        aria-required="true"
+                        aria-label="Website URL"
+                        inputmode="url"
+                    >
+                    <label for="countrySelect" class="visually-hidden">Select Region</label>
+                    <select id="countrySelect" title="Select Region" aria-label="Select Region">
+                        <option value="KR">KR</option>
+                        <option value="US">US</option>
+                        <option value="JP">JP</option>
+                        <option value="global">Global</option>
+                    </select>
+                    <button type="submit" id="submitBtn" aria-label="Analyze Website">
+                        <span class="btn-text">Analyze</span>
+                        <span class="loading-spinner" style="display: none;" aria-hidden="true"></span>
+                    </button>
                 </div>
-            </section>
-            <section id="secResult" class="info-card" style="display:none;">
-                <h2 style="font-size:1.2em; margin-bottom:1em;">Security Audit Results</h2>
-                <ul style="line-height:2;">
-                    <li><strong>HTTPS:</strong> Enabled</li>
-                    <li><strong>SSL Certificate:</strong> Valid</li>
-                    <li><strong>HSTS:</strong> Enabled</li>
-                    <li><strong>X-Frame-Options:</strong> Not set</li>
-                    <li><strong>Content Security Policy:</strong> Partially missing</li>
-                    <li><strong>Referrer Policy:</strong> Good</li>
-                </ul>
-            </section>
-            <section class="popular-sites" aria-label="Most Popular Sites Worldwide">
-                <h3 style="text-align: center; margin-bottom: 18px; font-size: 1.1em; color: #666;">🌎 Most Popular Sites Worldwide</h3>
-                <div class="all-sites-list" style="display:flex; flex-direction:column; align-items:center; gap:18px; margin: 40px 0 32px 0;">
-                    <div class="sites-row" style="display:flex; justify-content:center; gap:24px;">
-                        <a class="popular-site" href="#" data-url="https://www.google.com" target="_self" rel="noopener" title="Google">
-                            <span class="site-icon" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
-                              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Favicon_2025.svg/1920px-Google_Favicon_2025.svg.png" alt="Google" width="36" height="36" />
-                            </span>
-                            <span>Google</span>
-                        </a>
-                        <a class="popular-site" href="#" data-url="https://www.facebook.com" target="_self" rel="noopener" title="Facebook">
-                            <span class="site-icon" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
-                              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/2023_Facebook_icon.svg/1200px-2023_Facebook_icon.svg.png?20231011122028" alt="Facebook" width="36" height="36" />
-                            </span>
-                            <span>Facebook</span>
-                        </a>
-                        <a class="popular-site" href="#" data-url="https://www.youtube.com" target="_self" rel="noopener" title="YouTube">
-                            <span class="site-icon" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
-                              <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube" width="36" height="36" />
-                            </span>
-                            <span>YouTube</span>
-                        </a>
-                        <a class="popular-site" href="#" data-url="https://www.threads.net" target="_self" rel="noopener" title="Threads">
-                            <span class="site-icon" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
-                              <img src="https://upload.wikimedia.org/wikipedia/commons/9/9d/Threads_%28app%29_logo.svg" alt="Threads" width="36" height="36" />
-                            </span>
-                            <span>Threads</span>
-                        </a>
+            </form>
+        </section>
+        <section class="results-section" id="resultsSection" style="display: none;" aria-live="polite">
+            <header class="info-header">
+                <h2>Security Audit Report</h2>
+                <div class="status-indicator" id="statusIndicator" aria-live="polite"></div>
+            </header>
+            <div class="info-grid">
+                <article class="info-card security-score-card" style="grid-column: 1 / -1;" aria-labelledby="securityScoreTitle">
+                    <h3 id="securityScoreTitle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -3px; margin-right: 8px;" aria-hidden="true"><path d="M9 12l2 2 4-4"></path><path d="M21 2l-9 9-4-4-6 6"></path><path d="M21 21V9"></path><path d="M21 9H9"></path></svg>
+                        Security Score: <span id="securityScore">--</span>/100
+                    </h3>
+                    <div class="security-progress-bar">
+                        <div class="security-progress" id="securityProgress" style="width: 0%"></div>
                     </div>
-                    <div class="sites-row" style="display:flex; justify-content:center; gap:24px;">
-                        <a class="popular-site" href="#" data-url="https://www.blueskyweb.xyz" target="_self" rel="noopener" title="Bluesky">
-                            <span class="site-icon" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
-                              <img src="https://upload.wikimedia.org/wikipedia/commons/f/fc/Bluesky_butterfly-logo.svg" alt="Bluesky" width="36" height="36" />
-                            </span>
-                            <span>Bluesky</span>
-                        </a>
-                        <a class="popular-site" href="#" data-url="https://www.mastodon.social" target="_self" rel="noopener" title="Mastodon">
-                            <span class="site-icon" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
-                              <img src="https://upload.wikimedia.org/wikipedia/commons/4/48/Mastodon_Logotype_%28Simple%29.svg" alt="Mastodon" width="36" height="36" />
-                            </span>
-                            <span>Mastodon</span>
-                        </a>
-                        <a class="popular-site" href="#" data-url="https://www.notion.so" target="_self" rel="noopener" title="Notion">
-                            <span class="site-icon" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;">
-                              <img src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Notion-logo.svg" alt="Notion" width="36" height="36" />
-                            </span>
-                            <span>Notion</span>
-                        </a>
-                    </div>
-                </div>
-            </section>
-            <section id="securityResult" class="info-card" style="display:none;">
-                <h2 style="font-size:1.2em; margin-bottom:1em;">Security Audit Results</h2>
-                <ul style="line-height:2;">
-                    <li><strong>HTTPS:</strong> Enabled</li>
-                    <li><strong>SSL Certificate:</strong> Valid</li>
-                    <li><strong>HSTS:</strong> Enabled</li>
-                    <li><strong>X-Frame-Options:</strong> Not set</li>
-                    <li><strong>Content Security Policy:</strong> Partially missing</li>
-                    <li><strong>Referrer Policy:</strong> Good</li>
-                </ul>
-            </section>
-            <div id="toast" class="toast" role="status" aria-live="polite"></div>
-        </main>
-    </div>
-    <footer class="footer">
-      <div class="footer-container notion-footer">
-        <div class="notion-footer-grid">
-          <div class="notion-footer-section">
-            <div class="notion-footer-title">Services</div>
-            <ul>
-              <li><a href="index.html">Website Analysis</a></li>
-              <li><a href="seo-check.html">SEO Check</a></li>
-              <li><a href="performance-test.html">Performance Test</a></li>
-              <li><a href="security-audit.html">Security Audit</a></li>
-              <li><a href="metadata-analysis.html">Metadata Analysis</a></li>
-            </ul>
-          </div>
-          <div class="notion-footer-section">
-            <div class="notion-footer-title">Solutions</div>
-            <ul>
-              <li><a href="#how-to-use">How to Use</a></li>
-              <li><a href="#api-docs">API Documentation</a></li>
-              <li><a href="#best-practices">Best Practices</a></li>
-              <li><a href="#troubleshooting">Troubleshooting</a></li>
-              <li><a href="#faq">FAQ</a></li>
-            </ul>
-          </div>
-          <div class="notion-footer-section">
-            <div class="notion-footer-title">Company</div>
-            <ul>
-              <li><a href="#about">About Us</a></li>
-              <li><a href="#privacy">Privacy Policy</a></li>
-              <li><a href="#terms">Terms of Service</a></li>
-              <li><a href="#careers">Careers</a></li>
-              <li><a href="#blog">Blog</a></li>
-            </ul>
-          </div>
-          <div class="notion-footer-section">
-            <div class="notion-footer-title">Contact</div>
-            <ul>
-              <li><a href="mailto:pistolinkr@icloud.com">pistolinkr@icloud.com</a></li>
-              <li><a href="#contact-form">Contact Form</a></li>
-              <li><a href="#support">Support Center</a></li>
-              <li><a href="#feedback">Feedback</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="notion-footer-bottom">
-          <div class="notion-footer-social">
-            <a href="#" aria-label="Twitter"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
-            <a href="#" aria-label="LinkedIn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
-            <a href="https://github.com/qklp1235/Volume505/" target="_blank" rel="noopener" aria-label="GitHub Repository"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.66-.22.66-.48 0-.24-.01-.87-.01-1.7-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.1-1.46-1.1-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0 1 12 6.8c.85.004 1.71.115 2.51.337 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.85 0 1.33-.01 2.4-.01 2.73 0 .27.16.58.67.48A10.01 10.01 0 0 0 22 12c0-5.52-4.48-10-10-10z"/></svg></a>
-          </div>
-          <div class="notion-footer-copyright">&copy; 2025 Volume 505. All rights reserved.</div>
-        </div>
+                    <p class="security-summary" id="securitySummary">Enter a URL to start security audit.</p>
+                </article>
+                <article class="info-card" id="secResult" style="display:none;">
+                    <h3>Security Audit Results</h3>
+                    <ul style="line-height:2;">
+                        <li><strong>HTTPS:</strong> Enabled</li>
+                        <li><strong>SSL Certificate:</strong> Valid</li>
+                        <li><strong>HSTS:</strong> Enabled</li>
+                        <li><strong>X-Frame-Options:</strong> Not set</li>
+                        <li><strong>Content Security Policy:</strong> Partially missing</li>
+                        <li><strong>Referrer Policy:</strong> Good</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </main>
+</div>
+<footer class="footer">
+  <div class="footer-container notion-footer">
+    <div class="notion-footer-grid">
+      <div class="notion-footer-section">
+        <div class="notion-footer-title">Services</div>
+        <ul>
+          <li><a href="index.html">Website Analysis</a></li>
+          <li><a href="seo-check.html">SEO Check</a></li>
+          <li><a href="performance-test.html">Performance Test</a></li>
+          <li><a href="security-audit.html">Security Audit</a></li>
+          <li><a href="metadata-analysis.html">Metadata Analysis</a></li>
+        </ul>
       </div>
-    </footer>
-    <script>
-    document.getElementById('secForm').onsubmit = function(e) {
-        e.preventDefault();
-        document.getElementById('secResult').style.display = 'block';
-    };
-
-    // 인기 사이트 클릭 시 인풋에 URL 입력 및 포커스
-    if (document.querySelector('.popular-sites-list, .newborn-sites-list')) {
-      document.addEventListener('click', function(e) {
-        const a = e.target.closest('.popular-site');
-        if (a && a.dataset.url) {
-          e.preventDefault();
-          const urlInput = document.getElementById('urlInput');
-          if (urlInput) {
-            urlInput.value = a.dataset.url;
-            urlInput.focus();
-          }
-        }
-      });
-    }
-    </script>
-    <script src="script.js" defer></script>
-    <script>
-        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-    </script>
-    <script defer src="/_vercel/insights/script.js"></script>
+      <div class="notion-footer-section">
+        <div class="notion-footer-title">Solutions</div>
+        <ul>
+          <li><a href="#how-to-use">How to Use</a></li>
+          <li><a href="#api-docs">API Documentation</a></li>
+          <li><a href="#best-practices">Best Practices</a></li>
+          <li><a href="#troubleshooting">Troubleshooting</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="notion-footer-section">
+        <div class="notion-footer-title">Company</div>
+        <ul>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#privacy">Privacy Policy</a></li>
+          <li><a href="#terms">Terms of Service</a></li>
+          <li><a href="#careers">Careers</a></li>
+          <li><a href="#blog">Blog</a></li>
+        </ul>
+      </div>
+      <div class="notion-footer-section">
+        <div class="notion-footer-title">Contact</div>
+        <ul>
+          <li><a href="mailto:pistolinkr@icloud.com">pistolinkr@icloud.com</a></li>
+          <li><a href="#contact-form">Contact Form</a></li>
+          <li><a href="#support">Support Center</a></li>
+          <li><a href="#feedback">Feedback</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="notion-footer-bottom">
+      <div class="notion-footer-social">
+        <a href="#" aria-label="Twitter"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        <a href="https://github.com/qklp1235/Volume505/" target="_blank" rel="noopener" aria-label="GitHub Repository"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.66-.22.66-.48 0-.24-.01-.87-.01-1.7-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.1-1.46-1.1-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0 1 12 6.8c.85.004 1.71.115 2.51.337 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.85 0 1.33-.01 2.4-.01 2.73 0 .27.16.58.67.48A10.01 10.01 0 0 0 22 12c0-5.52-4.48-10-10-10z"/></svg></a>
+      </div>
+      <div class="notion-footer-copyright">&copy; 2025 Volume 505. All rights reserved.</div>
+    </div>
+  </div>
+</footer>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="script.js" defer></script>
+<script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html> 
