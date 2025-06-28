@@ -575,6 +575,21 @@ header {
         color: var(--c-text-primary) !important;
         transform: scale(1.1) !important;
     }
+    .notion-footer,
+    .footer-container,
+    .notion-footer-grid,
+    .notion-footer-section,
+    .notion-footer-title,
+    .notion-footer-bottom,
+    .notion-footer-social,
+    .notion-footer-copyright {
+        border: none !important;
+        border-top: none !important;
+        border-bottom: none !important;
+        border-right: none !important;
+        border-left: none !important;
+        box-shadow: none !important;
+    }
 }
 
 /* 모바일 디바이스에서 오버스크롤 방지 강화 */
