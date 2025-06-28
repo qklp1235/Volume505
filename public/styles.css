@@ -508,6 +508,12 @@ header {
         margin-top: -20px !important;
         margin-bottom: 18px !important;
         gap: 10px !important;
+        transition: margin-top 0.3s ease !important;
+    }
+    .input-section:focus-within ~ .all-sites-list,
+    .input-section:focus-within + .all-sites-list,
+    .input-section:focus-within ~ * .all-sites-list {
+        margin-top: -40px !important;
     }
     .sites-row {
         gap: 14px !important;
