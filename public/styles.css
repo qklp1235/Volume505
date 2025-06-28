@@ -1438,4 +1438,18 @@ header {
 .seo-score-card.dragging h3[data-draggable="true"]::after {
     opacity: 1;
     color: var(--c-accent);
+}
+
+/* Remove footer background for desktop/tablet (except mobile) */
+.notion-footer,
+.footer-container {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 768px) {
+  .notion-footer,
+  .footer-container {
+    /* Restore mobile background if needed (existing code remains) */
+  }
 } 
