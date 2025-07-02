@@ -117,6 +117,7 @@ header {
     align-items: center;
     justify-content: center;
     color: var(--c-text-secondary);
+    z-index: 10000;
 }
 
 .settings-btn:hover {
