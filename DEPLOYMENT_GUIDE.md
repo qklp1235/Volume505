@@ -1,6 +1,6 @@
 # 🌐 Volume505 도메인 연결 배포 가이드
 
-이 가이드는 `www.volume505.com` 도메인을 연결하여 사이트 정보 요청기를 배포하는 방법을 설명합니다.
+이 가이드는 `www.volume505.com` 도메인을 연결하여 사이트 정보 요청기가 어떻게 작동하는 지 설명합니다.
 
 ## 📋 사전 준비사항
 
@@ -269,14 +269,278 @@ sudo tail -f /var/log/nginx/error.log
 ```
 
 ## 📞 지원
+Pistolinkr@icloud.com
 
-문제가 발생하면 다음 정보를 확인해주세요:
 
-1. **서버 로그**: `pm2 logs volume505-site-info`
-2. **Nginx 로그**: `/var/log/nginx/error.log`
-3. **도메인 상태**: `nslookup www.volume505.com`
-4. **SSL 상태**: `sudo certbot certificates`
+# 🌐 Volume505 Domain Connection Distribution Guide
 
----
+This guide explains how the site information requester works by connecting to the `www.volume505.com` domain.
 
-**배포 완료 후**: https://www.volume505.com 에서 사이트 정보 요청기를 사용할 수 있습니다! 
+## 📋 Preliminary Preparations
+
+### 1. Domain Settings
+- Ownership of the `www.volume505.com` domain
+- DNS management permissions
+- A record settings from the domain registrar
+
+### 2. Server Preparation
+- Ubuntu 20.04+ server
+- Minimum 1GB RAM, 20GB storage space
+- Public IP address
+- SSH access permissions
+
+## 🚀 Step 1: DNS Settings
+
+### Add an A record from the domain registrar
+```
+Type: A
+Name: www
+Value: [server_IP_address]
+TTL: 3600 (or default)
+```
+
+### Additional A record (for root domain)
+```
+Type: A
+Name: @ (or leave blank)
+Value: [server_IP_address]
+TTL: 3600
+```
+
+## 🖥️ Step 2: Server Setup
+
+### Connect to the server
+```bash
+ssh username@your-server-ip
+```
+
+### Upload project files
+```bash
+# Compress files locally
+tar -czf volume505-site-info.tar.gz *
+
+# Upload to server (using scp)
+scp volume505-site-info.tar.gz username@your-server-ip:~/
+
+# Unzip on server
+tar -xzf volume505-site-info.tar.gz
+cd volume505-site-info
+```
+
+## ⚙️ Step 3: Automated deployment
+
+### Run the deployment script
+```bash
+# Grant execution permissions
+chmod +x deploy.sh
+
+# Run deployment
+./deploy.sh
+```
+
+### Manual deployment (optional)
+```bash
+# Update the system
+sudo apt update && sudo apt upgrade -y
+
+# Install Node.js
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Install PM2
+sudo npm install -g pm2
+
+# Install Nginx
+sudo apt install -y nginx
+
+# Install Certbot
+sudo apt install -y certbot python3-certbot-nginx
+
+# Install dependencies
+npm install --production
+
+# Set environment variables
+cp env.example .env
+nano .env  # Edit settings such as API keys
+```
+
+## 🔑 Step 4: Set environment variables
+
+### Edit .env file
+```bash
+nano .env
+```
+
+### Required settings
+```env
+# Server Configuration
+PORT=3001
+NODE_ENV=production
+
+# Domain Configuration
+DOMAIN=www.volume505.com
+ALLOWED_ORIGINS=https://www.volume505.com,https://volume505.com
+
+# Perplexity AI API (required)
+PERPLEXITY_API_KEY=sk-your-actual-api-key-here
+
+# Security
+SESSION_SECRET=your-random-session-secret-here
+```
+
+## 🔒 Step 5: Install SSL Certificate
+
+### Issue Let's Encrypt Certificate
+```bash
+sudo certbot --nginx -d www.volume505.com -d volume505.com
+```
+
+### Set up automatic certificate renewal
+```bash
+# Renewal test
+sudo certbot renew --dry-run
+
+# Add automatic renewal to crontab
+sudo crontab -e
+# Add the following line:
+# 0 12 * * * /usr/bin/certbot renew --quiet
+```
+
+## 🚀 Step 6: Start the application
+
+### Start the application with PM2
+```bash
+# Start in production environment
+pm2 start ecosystem.config.js --env production
+
+# Save PM2 settings
+pm2 save
+
+# Set to start automatically at system boot
+pm2 startup
+```
+
+### Restart Nginx
+```bash
+sudo systemctl reload nginx
+sudo systemctl enable nginx
+```
+
+## ✅ Step 7: Verify deployment
+
+### Domain access test
+```bash
+# Verify HTTP redirect
+curl -I http://www.volume505.com
+
+# Verify HTTPS access
+curl -I https://www.volume505.com
+
+# Health check
+curl https://www.volume505.com/health
+```
+
+### Verify in browser
+- Access https://www.volume505.com
+- Test site information request function
+- Test AI summary function
+
+## 📊 Step 8: Set up monitoring
+
+### Check PM2 status
+```bash
+pm2 status
+pm2 logs volume505-site-info
+```
+
+### Check Nginx logs
+```bash
+sudo tail -f /var/log/nginx/access.log
+sudo tail -f /var/log/nginx/error.log
+```
+
+### Monitor system resources
+```bash
+htop
+df -h
+free -h
+```
+
+## 🔧 Step 9: Maintenance
+
+### Application Updates
+```bash
+# After updating the code
+pm2 restart volume505-site-info
+pm2 save
+```
+
+### Log Management
+```bash
+# PM2 log cleanup
+pm2 flush
+
+# Nginx log rotation
+sudo logrotate -f /etc/logrotate.d/nginx
+```
+
+### Backup Settings
+```bash
+# Application Backup
+tar -czf backup-$(date +%Y%m%d).tar.gz /var/www/volume505-site-info
+
+# SSL Certificate Backup
+sudo cp -r /etc/letsencrypt/live/www.volume505.com /backup/ssl/
+```
+
+## 🚨 Troubleshooting
+
+### Common Issues
+
+#### 1. Domain Not Accessible
+```bash
+# DNS Check
+nslookup www.volume505.com
+dig www.volume505.com
+
+# Firewall Check
+sudo ufw status
+sudo ufw allow 80
+sudo ufw allow 443
+```
+
+#### 2. SSL certificate error
+```bash
+# Check certificate status
+sudo certbot certificates
+
+# Reissue certificate
+sudo certbot --nginx -d www.volume505.com -d volume505.com --force-renewal
+```
+
+#### 3. Application error
+```bash
+# Check PM2 logs
+pm2 logs volume505-site-info --lines 100
+
+# Check environment variables
+pm2 env volume505-site-info
+
+# Restart application
+pm2 restart volume505-site-info
+```
+
+#### 4. Nginx Errors
+```bash
+# Check configuration file syntax
+sudo nginx -t
+
+# Restart Nginx
+sudo systemctl restart nginx
+
+# Check error logs
+sudo tail -f /var/log/nginx/error.log
+```
+
+## 📞 Support
+Pistolinkr@icloud.com

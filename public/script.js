@@ -18,6 +18,18 @@ class SiteInfoRequester {
         this.summaryCard = document.querySelector('.ai-summary-card');
         this.summaryContent = document.getElementById('aiSummaryContent');
         
+        // 설정 모달 관련 요소들
+        this.settingsBtn = document.getElementById('settingsBtn');
+        this.settingsModal = document.getElementById('settingsModal');
+        this.closeSettingsModal = document.getElementById('closeSettingsModal');
+        this.apiKeyInput = document.getElementById('apiKeyInput');
+        this.toggleApiKey = document.getElementById('toggleApiKey');
+        this.modelSelect = document.getElementById('modelSelect');
+        this.temperatureRange = document.getElementById('temperatureRange');
+        this.temperatureValue = document.getElementById('temperatureValue');
+        this.saveApiKey = document.getElementById('saveApiKey');
+        this.clearApiKey = document.getElementById('clearApiKey');
+        
         // 드래그 관련 변수 추가
         this.draggedCard = null;
         this.dragOffset = { x: 0, y: 0 };
@@ -51,6 +63,12 @@ class SiteInfoRequester {
         
         // 페이지 로드 시 모든 카드에 드래그 기능 추가
         this.setupGlobalDragHandlers();
+        
+        // 설정 모달 관련 이벤트 리스너
+        this.initSettingsModal();
+        
+        // 사용자 설정 로드
+        this.loadUserSettings();
     }
 
     autoPrependProtocol() {
@@ -568,13 +586,10 @@ class SiteInfoRequester {
             this.showToast(`AI Summary is limited to once every 3 minutes. Please wait ${remain} seconds.`);
             return;
         }
-        lastAiSummaryTime = now;
 
         if (!this.summaryCard || !this.summaryContent) return;
 
         this.summaryCard.style.display = 'block';
-        this.summaryContent.classList.add('loading');
-        this.summaryContent.textContent = 'Analyzing content...';
         
         // Track AI Summary start
         if (typeof window.va !== 'undefined') {
@@ -585,24 +600,18 @@ class SiteInfoRequester {
         this.setupAiSummaryDragHandler();
         
         try {
-            const summaryText = await this.generateAiSummary(siteInfo);
-            this.summaryContent.classList.remove('loading');
-            this.summaryContent.innerHTML = ''; // Clear for typing
-            this.summaryContent.classList.add('typing');
-            await this.typeWriter(summaryText, this.summaryContent);
-            this.summaryContent.classList.remove('typing');
+            await this.generateAiSummary(siteInfo);
+            
+            // 성공 시에만 쿨타임 업데이트
+            lastAiSummaryTime = now;
             
             // Track AI Summary completion
             if (typeof window.va !== 'undefined') {
                 window.va('track', 'AI Summary Completed', { 
-                    url: siteInfo.url,
-                    summaryLength: summaryText.length
+                    url: siteInfo.url
                 });
             }
         } catch (e) {
-            this.summaryContent.classList.remove('loading');
-            this.summaryContent.textContent = "Could not generate AI summary due to an error.";
-            
             // Track AI Summary error
             if (typeof window.va !== 'undefined') {
                 window.va('track', 'AI Summary Error', { 
@@ -630,60 +639,102 @@ class SiteInfoRequester {
     }
 
     async generateAiSummary(siteInfo) {
-        // Extract main site information
-        const { title, description, mainContent } = siteInfo;
-        let content = '';
-        if (title) content += `Title: ${title}\n`;
-        if (description) content += `Description: ${description}\n`;
-        if (mainContent) content += `Content: ${mainContent}\n`;
-        // Perplexity API 프록시 서버에 요청
+        const userSettings = this.getUserSettings();
+        
+        if (!userSettings || !userSettings.apiKey) {
+            this.summaryContent.innerHTML = `
+                <div style="text-align: center; padding: 20px; color: var(--c-text-secondary);">
+                    <p>AI 요약을 사용하려면 설정에서 Perplexity API 키를 입력해주세요.</p>
+                    <button onclick="document.querySelector('.settings-btn').click()" style="
+                        margin-top: 12px;
+                        padding: 8px 16px;
+                        background: var(--c-accent);
+                        color: var(--c-surface);
+                        border: none;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 0.9rem;
+                    ">설정 열기</button>
+                </div>
+            `;
+            throw new Error('API key not configured');
+        }
+
+        this.summaryContent.classList.add('loading');
+        this.summaryContent.innerHTML = 'AI가 웹사이트를 분석하고 있습니다...';
+
         try {
-            const summary = await this.fetchAiSummaryFromServer(content);
+            const summary = await this.fetchAiSummaryFromServer(siteInfo, userSettings);
+            this.summaryContent.classList.remove('loading');
+            this.summaryContent.classList.add('typing');
+            await this.typeWriter(summary, this.summaryContent);
             return summary;
-        } catch (e) {
-            return 'AI summary failed: ' + e.message;
+        } catch (error) {
+            this.summaryContent.classList.remove('loading', 'typing');
+            this.summaryContent.innerHTML = `
+                <div style="color: #dc2626; text-align: center; padding: 20px;">
+                    <p><strong>AI 요약 실패:</strong> ${error.message}</p>
+                    <p style="font-size: 0.9rem; margin-top: 8px;">API 키를 확인하거나 잠시 후 다시 시도해주세요.</p>
+                    <button onclick="document.querySelector('.settings-btn').click()" style="
+                        margin-top: 12px;
+                        padding: 8px 16px;
+                        background: var(--c-accent);
+                        color: var(--c-surface);
+                        border: none;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-size: 0.9rem;
+                    ">설정 확인</button>
+                </div>
+            `;
+            console.error('AI Summary Error:', error);
+            throw error;
         }
     }
 
-    async fetchAiSummaryFromServer(siteContent) {
-        // Use relative path for Vercel serverless function in production
-        // and localhost for local development
-        const apiUrl = window.location.hostname === 'localhost' 
-            ? 'http://localhost:3001/api/summary' 
-            : '/api/summary';
-            
-        const res = await fetch(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: siteContent })
-        });
-        
-        if (!res.ok) {
-            let errorMessage = `Server error: ${res.status} ${res.statusText}`;
-            try {
-                const errorData = await res.json();
-                if (errorData.error) {
-                    errorMessage = errorData.error;
-                }
-            } catch (e) {
-                // If response is not JSON, use the default error message
+    async fetchAiSummaryFromServer(siteInfo, userSettings) {
+        const siteContent = `
+            Website: ${siteInfo.url}
+            Title: ${siteInfo.title}
+            Description: ${siteInfo.description}
+            Language: ${siteInfo.language}
+            Content Preview: ${siteInfo.mainContent}
+            Status: ${siteInfo.statusCode}
+            HTTPS: ${siteInfo.isHttps ? 'Yes' : 'No'}
+        `;
+
+        try {
+            const response = await fetch('/api/summary', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    content: siteContent,
+                    apiKey: userSettings.apiKey,
+                    model: userSettings.model || 'llama-3.1-sonar-small-128k-online',
+                    temperature: userSettings.temperature || 0.1
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
             }
-            throw new Error(errorMessage);
+
+            const data = await response.json();
+            
+            if (!data.summary) {
+                throw new Error('서버에서 올바른 응답을 받지 못했습니다.');
+            }
+
+            return data.summary;
+        } catch (error) {
+            if (error.message.includes('fetch')) {
+                throw new Error('서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.');
+            }
+            throw error;
         }
-        
-        const data = await res.json();
-        
-        if (data.error) {
-            throw new Error(data.error);
-        }
-        
-        // 요약이 너무 짧거나 잘린 것 같으면 기본 메시지 추가
-        const summary = data.summary || 'No summary available';
-        if (summary.length < 50) {
-            return summary + '\n\n*Note: This appears to be a shortened response. The full analysis may have been truncated.*';
-        }
-        
-        return summary;
     }
 
     async typeWriter(text, element) {
@@ -862,6 +913,138 @@ class SiteInfoRequester {
                 }
             });
         }, 100);
+    }
+
+    // 설정 모달 초기화
+    initSettingsModal() {
+        // 설정 버튼 클릭
+        this.settingsBtn.addEventListener('click', () => this.openSettingsModal());
+        
+        // 모달 닫기 버튼들
+        this.closeSettingsModal.addEventListener('click', () => this.closeModalSettings());
+        this.settingsModal.addEventListener('click', (e) => {
+            if (e.target === this.settingsModal) {
+                this.closeModalSettings();
+            }
+        });
+        
+        // API 키 가시성 토글
+        this.toggleApiKey.addEventListener('click', () => this.toggleApiKeyVisibility());
+        
+        // 온도 슬라이더 값 업데이트
+        this.temperatureRange.addEventListener('input', (e) => {
+            this.temperatureValue.textContent = e.target.value;
+        });
+        
+        // 설정 저장 및 초기화
+        this.saveApiKey.addEventListener('click', () => this.saveUserSettings());
+        this.clearApiKey.addEventListener('click', () => this.clearUserSettings());
+        
+        // ESC 키로 모달 닫기
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.settingsModal.style.display === 'flex') {
+                this.closeModalSettings();
+            }
+        });
+    }
+
+    // 설정 모달 열기
+    openSettingsModal() {
+        this.settingsModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        this.apiKeyInput.focus();
+    }
+
+    // 설정 모달 닫기
+    closeModalSettings() {
+        this.settingsModal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    // API 키 가시성 토글
+    toggleApiKeyVisibility() {
+        const isPassword = this.apiKeyInput.type === 'password';
+        this.apiKeyInput.type = isPassword ? 'text' : 'password';
+        
+        // 아이콘 업데이트
+        const svg = this.toggleApiKey.querySelector('svg');
+        if (isPassword) {
+            // 눈 감김 아이콘
+            svg.innerHTML = `
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 3.94-4.55"/>
+                <path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
+                <path d="M12 4a10.07 10.07 0 0 1 8 8c0 .18-.01.35-.02.53"/>
+                <path d="M2 2l20 20"/>
+            `;
+        } else {
+            // 눈 뜸 아이콘
+            svg.innerHTML = `
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+            `;
+        }
+    }
+
+    // 사용자 설정 저장
+    saveUserSettings() {
+        const settings = {
+            apiKey: this.apiKeyInput.value.trim(),
+            model: this.modelSelect.value,
+            temperature: parseFloat(this.temperatureRange.value)
+        };
+        
+        if (!settings.apiKey) {
+            this.showToast('API 키를 입력해주세요.');
+            return;
+        }
+        
+        // 로컬 스토리지에 저장
+        localStorage.setItem('perplexitySettings', JSON.stringify(settings));
+        
+        this.showToast('설정이 저장되었습니다.');
+        this.closeModalSettings();
+    }
+
+    // 사용자 설정 불러오기
+    loadUserSettings() {
+        const savedSettings = localStorage.getItem('perplexitySettings');
+        if (savedSettings) {
+            try {
+                const settings = JSON.parse(savedSettings);
+                this.apiKeyInput.value = settings.apiKey || '';
+                this.modelSelect.value = settings.model || 'llama-3.1-sonar-small-128k-online';
+                this.temperatureRange.value = settings.temperature || 0.1;
+                this.temperatureValue.textContent = settings.temperature || 0.1;
+            } catch (error) {
+                console.error('설정 로드 중 오류:', error);
+            }
+        }
+    }
+
+    // 사용자 설정 초기화
+    clearUserSettings() {
+        if (confirm('모든 설정을 초기화하시겠습니까?')) {
+            localStorage.removeItem('perplexitySettings');
+            this.apiKeyInput.value = '';
+            this.modelSelect.value = 'llama-3.1-sonar-small-128k-online';
+            this.temperatureRange.value = 0.1;
+            this.temperatureValue.textContent = '0.1';
+            this.showToast('설정이 초기화되었습니다.');
+        }
+    }
+
+    // 저장된 설정 가져오기
+    getUserSettings() {
+        const savedSettings = localStorage.getItem('perplexitySettings');
+        if (savedSettings) {
+            try {
+                return JSON.parse(savedSettings);
+            } catch (error) {
+                console.error('설정 파싱 중 오류:', error);
+                return null;
+            }
+        }
+        return null;
     }
 }
 
