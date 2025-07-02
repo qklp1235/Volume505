@@ -49,7 +49,7 @@
 ## 🌐 도메인 연결 및 배포
 
 ### 1. 서버 준비
-- Ubuntu 20.04+ 서버
+- Vercel 서버
 - 도메인 DNS 설정 완료 (www.volume505.com → 서버 IP)
 
 ### 2. 자동 배포
@@ -178,6 +178,7 @@ sudo nginx -t
 **버전**: 1.0.0  
 **최종 업데이트**: 2024년 
 
+G.gear® servcie Δ team presents
 ---
 
 # 🌐 Volume505 Site Info Requester
@@ -231,7 +232,7 @@ A web application that requests and displays site information for a given URL.
 ## 🌐 Domain Connection & Deployment
 
 ### 1. Server Preparation
-- Ubuntu 20.04+ server
+- Vercel Server
 - Domain DNS configured (www.volume505.com → server IP)
 
 ### 2. Automatic Deployment
@@ -359,3 +360,5 @@ This project is distributed under the MIT License.
 **Domain**: [www.volume505.com](https://www.volume505.com)  
 **Version**: 1.0.0  
 **Last Updated**: 2024 
+
+G.gear® servcie Δ team presents
