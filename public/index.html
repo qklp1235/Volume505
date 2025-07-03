@@ -328,13 +328,24 @@
         </div>
         <div class="modal-body">
             <div class="settings-section">
-                <h3>Perplexity AI Configuration</h3>
-                <p class="settings-description">Enter your Perplexity AI API key to enable AI-powered website analysis summaries.</p>
+                <h3>AI Configuration</h3>
+                <p class="settings-description">Choose your preferred AI service and enter your API key to enable AI-powered website analysis summaries.</p>
+                
+                <div class="input-group">
+                    <label for="aiServiceSelect">AI Service</label>
+                    <select id="aiServiceSelect" class="ai-service-select">
+                        <option value="openai">OpenAI (GPT-4, GPT-3.5)</option>
+                        <option value="claude">Anthropic Claude</option>
+                        <option value="perplexity">Perplexity AI</option>
+                        <option value="gemini">Google Gemini</option>
+                        <option value="cohere">Cohere</option>
+                    </select>
+                </div>
                 
                 <div class="input-group">
                     <label for="apiKeyInput">API Key</label>
                     <div class="api-key-input-container">
-                        <input type="password" id="apiKeyInput" placeholder="Enter your Perplexity API key" class="api-key-input">
+                        <input type="password" id="apiKeyInput" placeholder="Enter your API key" class="api-key-input">
                         <button type="button" class="toggle-visibility" id="toggleApiKey" aria-label="Toggle API key visibility">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -347,9 +358,9 @@
                 <div class="input-group">
                     <label for="modelSelect">AI Model</label>
                     <select id="modelSelect" class="model-select">
-                        <option value="llama-3.1-sonar-small-128k-online">Llama 3.1 Sonar Small 128K Online</option>
-                        <option value="llama-3.1-sonar-large-128k-online">Llama 3.1 Sonar Large 128K Online</option>
-                        <option value="llama-3.1-sonar-huge-128k-online">Llama 3.1 Sonar Huge 128K Online</option>
+                        <option value="gpt-4o">GPT-4o (Latest)</option>
+                        <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
                     </select>
                 </div>
                 
@@ -360,16 +371,55 @@
                 
                 <div class="api-key-info">
                     <h4>How to get your API key:</h4>
-                    <ol>
-                        <li>Visit <a href="https://perplexity.ai" target="_blank" rel="noopener">Perplexity AI</a></li>
-                        <li>Sign up or log in to your account</li>
-                        <li>Go to your API dashboard</li>
-                        <li>Generate a new API key</li>
-                        <li>Copy and paste it here</li>
-                    </ol>
+                    <div id="apiKeyGuide">
+                        <div class="api-guide openai-guide">
+                            <ol>
+                                <li>Visit <a href="https://platform.openai.com" target="_blank" rel="noopener">OpenAI Platform</a></li>
+                                <li>Sign up or log in to your account</li>
+                                <li>Go to API → API Keys</li>
+                                <li>Create a new secret key</li>
+                                <li>Copy and paste it here</li>
+                            </ol>
+                        </div>
+                        <div class="api-guide claude-guide" style="display: none;">
+                            <ol>
+                                <li>Visit <a href="https://console.anthropic.com" target="_blank" rel="noopener">Anthropic Console</a></li>
+                                <li>Sign up or log in to your account</li>
+                                <li>Go to API Keys section</li>
+                                <li>Generate a new API key</li>
+                                <li>Copy and paste it here</li>
+                            </ol>
+                        </div>
+                        <div class="api-guide perplexity-guide" style="display: none;">
+                            <ol>
+                                <li>Visit <a href="https://perplexity.ai" target="_blank" rel="noopener">Perplexity AI</a></li>
+                                <li>Sign up or log in to your account</li>
+                                <li>Go to your API dashboard</li>
+                                <li>Generate a new API key</li>
+                                <li>Copy and paste it here</li>
+                            </ol>
+                        </div>
+                        <div class="api-guide gemini-guide" style="display: none;">
+                            <ol>
+                                <li>Visit <a href="https://makersuite.google.com/app/apikey" target="_blank" rel="noopener">Google AI Studio</a></li>
+                                <li>Sign up or log in with your Google account</li>
+                                <li>Create API key</li>
+                                <li>Copy and paste it here</li>
+                            </ol>
+                        </div>
+                        <div class="api-guide cohere-guide" style="display: none;">
+                            <ol>
+                                <li>Visit <a href="https://dashboard.cohere.ai" target="_blank" rel="noopener">Cohere Dashboard</a></li>
+                                <li>Sign up or log in to your account</li>
+                                <li>Go to API Keys section</li>
+                                <li>Generate a new API key</li>
+                                <li>Copy and paste it here</li>
+                            </ol>
+                        </div>
+                    </div>
                     <p class="privacy-notice">
                         <strong>Privacy:</strong> Your API key is stored locally in your browser and never sent to our servers. 
-                        It's only used to make direct requests to Perplexity AI.
+                        It's only used to make direct requests to the selected AI service.
                     </p>
                 </div>
             </div>

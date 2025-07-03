@@ -1840,4 +1840,39 @@ header {
     .btn-primary, .btn-secondary {
         width: 100%;
     }
+}
+
+.ai-service-select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--c-border);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: var(--c-surface);
+    color: var(--c-text-primary);
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 4px;
+}
+
+.ai-service-select:focus {
+    border-color: var(--c-accent);
+}
+
+.api-guide {
+    transition: opacity 0.3s ease, height 0.3s ease;
+}
+
+.api-guide ol {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.api-guide ol li {
+    margin-bottom: 4px;
+    line-height: 1.5;
+}
+
+.api-guide a {
+    font-weight: 500;
 } 

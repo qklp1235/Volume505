@@ -22,6 +22,7 @@ class SiteInfoRequester {
         this.settingsBtn = document.getElementById('settingsBtn');
         this.settingsModal = document.getElementById('settingsModal');
         this.closeSettingsModal = document.getElementById('closeSettingsModal');
+        this.aiServiceSelect = document.getElementById('aiServiceSelect');
         this.apiKeyInput = document.getElementById('apiKeyInput');
         this.toggleApiKey = document.getElementById('toggleApiKey');
         this.modelSelect = document.getElementById('modelSelect');
@@ -34,6 +35,37 @@ class SiteInfoRequester {
         this.draggedCard = null;
         this.dragOffset = { x: 0, y: 0 };
         this.originalPosition = { x: 0, y: 0 };
+        
+        // AI 서비스별 모델 목록
+        this.aiModels = {
+            openai: [
+                { value: 'gpt-4o', label: 'GPT-4o (Latest)' },
+                { value: 'gpt-4-turbo', label: 'GPT-4 Turbo' },
+                { value: 'gpt-4', label: 'GPT-4' },
+                { value: 'gpt-3.5-turbo', label: 'GPT-3.5 Turbo' }
+            ],
+            claude: [
+                { value: 'claude-3-5-sonnet-20241022', label: 'Claude 3.5 Sonnet (Latest)' },
+                { value: 'claude-3-opus-20240229', label: 'Claude 3 Opus' },
+                { value: 'claude-3-sonnet-20240229', label: 'Claude 3 Sonnet' },
+                { value: 'claude-3-haiku-20240307', label: 'Claude 3 Haiku' }
+            ],
+            perplexity: [
+                { value: 'llama-3.1-sonar-huge-128k-online', label: 'Llama 3.1 Sonar Huge 128K Online' },
+                { value: 'llama-3.1-sonar-large-128k-online', label: 'Llama 3.1 Sonar Large 128K Online' },
+                { value: 'llama-3.1-sonar-small-128k-online', label: 'Llama 3.1 Sonar Small 128K Online' }
+            ],
+            gemini: [
+                { value: 'gemini-1.5-pro', label: 'Gemini 1.5 Pro' },
+                { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash' },
+                { value: 'gemini-pro', label: 'Gemini Pro' }
+            ],
+            cohere: [
+                { value: 'command-r-plus', label: 'Command R+' },
+                { value: 'command-r', label: 'Command R' },
+                { value: 'command', label: 'Command' }
+            ]
+        };
         
         this.sampleTopSites = {
             KR: ['naver.com', 'google.co.kr', 'youtube.com', 'daum.net', 'kakao.com', 'tistory.com', 'coupang.com', 'samsung.com', 'namu.wiki', 'netflix.com'],
@@ -712,7 +744,8 @@ class SiteInfoRequester {
                 body: JSON.stringify({
                     content: siteContent,
                     apiKey: userSettings.apiKey,
-                    model: userSettings.model || 'llama-3.1-sonar-small-128k-online',
+                    aiService: userSettings.aiService || 'openai',
+                    model: userSettings.model || 'gpt-4o',
                     temperature: userSettings.temperature || 0.1
                 })
             });
@@ -928,6 +961,9 @@ class SiteInfoRequester {
             }
         });
         
+        // AI 서비스 선택 변경
+        this.aiServiceSelect.addEventListener('change', () => this.updateModelOptions());
+        
         // API 키 가시성 토글
         this.toggleApiKey.addEventListener('click', () => this.toggleApiKeyVisibility());
         
@@ -946,6 +982,53 @@ class SiteInfoRequester {
                 this.closeModalSettings();
             }
         });
+    }
+
+    // AI 서비스에 따라 모델 옵션 업데이트
+    updateModelOptions() {
+        const selectedService = this.aiServiceSelect.value;
+        const models = this.aiModels[selectedService] || [];
+        
+        // 모델 선택 옵션 업데이트
+        this.modelSelect.innerHTML = '';
+        models.forEach(model => {
+            const option = document.createElement('option');
+            option.value = model.value;
+            option.textContent = model.label;
+            this.modelSelect.appendChild(option);
+        });
+        
+        // API 가이드 업데이트
+        this.updateApiGuide(selectedService);
+        
+        // API 키 placeholder 업데이트
+        this.updateApiKeyPlaceholder(selectedService);
+    }
+
+    // API 가이드 표시 업데이트
+    updateApiGuide(service) {
+        const guides = document.querySelectorAll('.api-guide');
+        guides.forEach(guide => {
+            guide.style.display = 'none';
+        });
+        
+        const selectedGuide = document.querySelector(`.${service}-guide`);
+        if (selectedGuide) {
+            selectedGuide.style.display = 'block';
+        }
+    }
+
+    // API 키 placeholder 업데이트
+    updateApiKeyPlaceholder(service) {
+        const placeholders = {
+            openai: 'Enter your OpenAI API key (sk-...)',
+            claude: 'Enter your Anthropic API key (sk-ant-...)',
+            perplexity: 'Enter your Perplexity API key (pplx-...)',
+            gemini: 'Enter your Google AI API key',
+            cohere: 'Enter your Cohere API key'
+        };
+        
+        this.apiKeyInput.placeholder = placeholders[service] || 'Enter your API key';
     }
 
     // 설정 모달 열기
@@ -988,6 +1071,7 @@ class SiteInfoRequester {
     // 사용자 설정 저장
     saveUserSettings() {
         const settings = {
+            aiService: this.aiServiceSelect.value,
             apiKey: this.apiKeyInput.value.trim(),
             model: this.modelSelect.value,
             temperature: parseFloat(this.temperatureRange.value)
@@ -999,7 +1083,7 @@ class SiteInfoRequester {
         }
         
         // 로컬 스토리지에 저장
-        localStorage.setItem('perplexitySettings', JSON.stringify(settings));
+        localStorage.setItem('aiSettings', JSON.stringify(settings));
         
         this.showToast('설정이 저장되었습니다.');
         this.closeModalSettings();
@@ -1007,26 +1091,32 @@ class SiteInfoRequester {
 
     // 사용자 설정 불러오기
     loadUserSettings() {
-        const savedSettings = localStorage.getItem('perplexitySettings');
+        const savedSettings = localStorage.getItem('aiSettings');
         if (savedSettings) {
             try {
                 const settings = JSON.parse(savedSettings);
+                this.aiServiceSelect.value = settings.aiService || 'openai';
+                this.updateModelOptions(); // 서비스에 따른 모델 목록 업데이트
                 this.apiKeyInput.value = settings.apiKey || '';
-                this.modelSelect.value = settings.model || 'llama-3.1-sonar-small-128k-online';
+                this.modelSelect.value = settings.model || this.aiModels[this.aiServiceSelect.value][0].value;
                 this.temperatureRange.value = settings.temperature || 0.1;
                 this.temperatureValue.textContent = settings.temperature || 0.1;
             } catch (error) {
                 console.error('설정 로드 중 오류:', error);
             }
+        } else {
+            // 기본값 설정
+            this.updateModelOptions();
         }
     }
 
     // 사용자 설정 초기화
     clearUserSettings() {
         if (confirm('모든 설정을 초기화하시겠습니까?')) {
-            localStorage.removeItem('perplexitySettings');
+            localStorage.removeItem('aiSettings');
+            this.aiServiceSelect.value = 'openai';
+            this.updateModelOptions();
             this.apiKeyInput.value = '';
-            this.modelSelect.value = 'llama-3.1-sonar-small-128k-online';
             this.temperatureRange.value = 0.1;
             this.temperatureValue.textContent = '0.1';
             this.showToast('설정이 초기화되었습니다.');
@@ -1035,7 +1125,7 @@ class SiteInfoRequester {
 
     // 저장된 설정 가져오기
     getUserSettings() {
-        const savedSettings = localStorage.getItem('perplexitySettings');
+        const savedSettings = localStorage.getItem('aiSettings');
         if (savedSettings) {
             try {
                 return JSON.parse(savedSettings);

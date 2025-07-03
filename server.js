@@ -59,82 +59,236 @@ app.get('/health', (req, res) => {
 
 // API endpoint for website analysis
 app.post('/api/summary', async (req, res) => {
-  const { content, apiKey, model, temperature } = req.body;
+  const { content, apiKey, model, temperature, aiService } = req.body;
   
   // 클라이언트에서 제공한 API 키를 우선 사용, 없으면 환경변수 사용
-  const perplexityApiKey = apiKey || process.env.PERPLEXITY_API_KEY;
+  const apiKeyToUse = apiKey || process.env.PERPLEXITY_API_KEY;
   
-  if (!perplexityApiKey) {
+  if (!apiKeyToUse) {
     return res.status(400).json({ 
-      error: 'API key is required. Please set your Perplexity API key in the settings.' 
+      error: 'API key is required. Please set your AI API key in the settings.' 
     });
   }
   
   // 사용자 설정값 또는 기본값 사용
-  const selectedModel = model || 'llama-3.1-sonar-small-128k-online';
+  const selectedModel = model || 'gpt-4o';
   const selectedTemperature = temperature !== undefined ? temperature : 0.1;
+  const selectedService = aiService || 'openai';
   
   try {
-    const response = await fetch('https://api.perplexity.ai/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${perplexityApiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: selectedModel,
-        messages: [
-          { 
-            role: 'system', 
-            content: 'You are a helpful website analyzer. Provide a detailed but concise summary of the website content in Korean. Include key features, content overview, and recent updates if available. Format your response with clear sections using markdown.' 
-          },
-          { 
-            role: 'user', 
-            content: `다음 웹사이트 정보를 분석하고 상세하게 요약해주세요:\n\n${content}` 
-          }
-        ],
-        max_tokens: 800,
-        temperature: selectedTemperature,
-        stream: false
-      })
-    });
+    let summary;
     
-    if (!response.ok) {
-      let errorMessage = `Perplexity API error: ${response.status} ${response.statusText}`;
-      
-      // API 응답에서 더 자세한 오류 정보 추출
-      try {
-        const errorData = await response.json();
-        if (errorData.error && errorData.error.message) {
-          errorMessage = errorData.error.message;
-        }
-      } catch (e) {
-        // JSON 파싱 실패 시 기본 오류 메시지 사용
-      }
-      
-      // 일반적인 오류 상황에 대한 사용자 친화적 메시지
-      if (response.status === 401) {
-        errorMessage = 'API 키가 유효하지 않습니다. 설정에서 올바른 API 키를 입력해주세요.';
-      } else if (response.status === 429) {
-        errorMessage = 'API 요청 한도를 초과했습니다. 잠시 후 다시 시도해주세요.';
-      } else if (response.status === 403) {
-        errorMessage = 'API 키 권한이 부족합니다. 계정 설정을 확인해주세요.';
-      }
-      
-      throw new Error(errorMessage);
+    switch (selectedService) {
+      case 'openai':
+        summary = await callOpenAI(apiKeyToUse, selectedModel, content, selectedTemperature);
+        break;
+      case 'claude':
+        summary = await callClaude(apiKeyToUse, selectedModel, content, selectedTemperature);
+        break;
+      case 'perplexity':
+        summary = await callPerplexity(apiKeyToUse, selectedModel, content, selectedTemperature);
+        break;
+      case 'gemini':
+        summary = await callGemini(apiKeyToUse, selectedModel, content, selectedTemperature);
+        break;
+      case 'cohere':
+        summary = await callCohere(apiKeyToUse, selectedModel, content, selectedTemperature);
+        break;
+      default:
+        throw new Error('지원하지 않는 AI 서비스입니다.');
     }
-    
-    const data = await response.json();
-    const summary = data.choices?.[0]?.message?.content || 'Summary could not be generated.';
     
     res.json({ summary });
   } catch (err) {
-    console.error('Perplexity API Error:', err);
+    console.error('AI API Error:', err);
     res.status(500).json({ 
       error: err.message || 'AI Summary failed. Please check your API key and try again.' 
     });
   }
 });
+
+// OpenAI API 호출
+async function callOpenAI(apiKey, model, content, temperature) {
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: model,
+      messages: [
+        { 
+          role: 'system', 
+          content: 'You are a helpful website analyzer. Provide a detailed but concise summary of the website content in Korean. Include key features, content overview, and recent updates if available. Format your response with clear sections using markdown.' 
+        },
+        { 
+          role: 'user', 
+          content: `다음 웹사이트 정보를 분석하고 상세하게 요약해주세요:\n\n${content}` 
+        }
+      ],
+      max_tokens: 800,
+      temperature: temperature
+    })
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(getErrorMessage(response.status, 'OpenAI', errorData));
+  }
+  
+  const data = await response.json();
+  return data.choices?.[0]?.message?.content || 'Summary could not be generated.';
+}
+
+// Claude API 호출
+async function callClaude(apiKey, model, content, temperature) {
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key': apiKey,
+      'Content-Type': 'application/json',
+      'anthropic-version': '2023-06-01'
+    },
+    body: JSON.stringify({
+      model: model,
+      max_tokens: 800,
+      temperature: temperature,
+      messages: [
+        {
+          role: 'user',
+          content: `You are a helpful website analyzer. Provide a detailed but concise summary of the website content in Korean. Include key features, content overview, and recent updates if available. Format your response with clear sections using markdown.
+
+다음 웹사이트 정보를 분석하고 상세하게 요약해주세요:
+
+${content}`
+        }
+      ]
+    })
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(getErrorMessage(response.status, 'Claude', errorData));
+  }
+  
+  const data = await response.json();
+  return data.content?.[0]?.text || 'Summary could not be generated.';
+}
+
+// Perplexity API 호출 (기존 코드 유지)
+async function callPerplexity(apiKey, model, content, temperature) {
+  const response = await fetch('https://api.perplexity.ai/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: model,
+      messages: [
+        { 
+          role: 'system', 
+          content: 'You are a helpful website analyzer. Provide a detailed but concise summary of the website content in Korean. Include key features, content overview, and recent updates if available. Format your response with clear sections using markdown.' 
+        },
+        { 
+          role: 'user', 
+          content: `다음 웹사이트 정보를 분석하고 상세하게 요약해주세요:\n\n${content}` 
+        }
+      ],
+      max_tokens: 800,
+      temperature: temperature,
+      stream: false
+    })
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(getErrorMessage(response.status, 'Perplexity', errorData));
+  }
+  
+  const data = await response.json();
+  return data.choices?.[0]?.message?.content || 'Summary could not be generated.';
+}
+
+// Gemini API 호출
+async function callGemini(apiKey, model, content, temperature) {
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      contents: [{
+        parts: [{
+          text: `You are a helpful website analyzer. Provide a detailed but concise summary of the website content in Korean. Include key features, content overview, and recent updates if available. Format your response with clear sections using markdown.
+
+다음 웹사이트 정보를 분석하고 상세하게 요약해주세요:
+
+${content}`
+        }]
+      }],
+      generationConfig: {
+        temperature: temperature,
+        maxOutputTokens: 800
+      }
+    })
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(getErrorMessage(response.status, 'Gemini', errorData));
+  }
+  
+  const data = await response.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Summary could not be generated.';
+}
+
+// Cohere API 호출
+async function callCohere(apiKey, model, content, temperature) {
+  const response = await fetch('https://api.cohere.ai/v1/generate', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: model,
+      prompt: `You are a helpful website analyzer. Provide a detailed but concise summary of the website content in Korean. Include key features, content overview, and recent updates if available. Format your response with clear sections using markdown.
+
+다음 웹사이트 정보를 분석하고 상세하게 요약해주세요:
+
+${content}
+
+요약:`,
+      max_tokens: 800,
+      temperature: temperature
+    })
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(getErrorMessage(response.status, 'Cohere', errorData));
+  }
+  
+  const data = await response.json();
+  return data.generations?.[0]?.text || 'Summary could not be generated.';
+}
+
+// 에러 메시지 생성 함수
+function getErrorMessage(status, service, errorData) {
+  const baseMessage = errorData.error?.message || errorData.message || `${service} API error: ${status}`;
+  
+  if (status === 401) {
+    return `API 키가 유효하지 않습니다. ${service} 설정에서 올바른 API 키를 입력해주세요.`;
+  } else if (status === 429) {
+    return `API 요청 한도를 초과했습니다. 잠시 후 다시 시도해주세요.`;
+  } else if (status === 403) {
+    return `API 키 권한이 부족합니다. ${service} 계정 설정을 확인해주세요.`;
+  }
+  
+  return baseMessage;
+}
 
 // Serve main page
 app.get('/', (req, res) => {
