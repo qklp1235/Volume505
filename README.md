@@ -124,8 +124,7 @@ NODE_ENV=production
 DOMAIN=www.volume505.com
 ALLOWED_ORIGINS=https://www.volume505.com, https://volume505.com
 
-# Perplexity AI API
-PERPLEXITY_API_KEY=your_perplexity_api_key_here
+# Custom own AI api key
 
 # Security
 SESSION_SECRET=your_session_secret_here
@@ -176,7 +175,7 @@ sudo nginx -t
 **개발자**: Volume505  
 **도메인**: [www.volume505.com](https://www.volume505.com)  
 **버전**: 1.0.0  
-**최종 업데이트**: 2024년 
+**최종 업데이트**: 2025년 ~
 
 G.gear® servcie Δ team presents
 ---
